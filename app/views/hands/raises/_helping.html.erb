@@ -1,0 +1,12 @@
+<%# Locals: domain, hand, assist. Ported from course-site's raises/_helping. %>
+<div class="cards">
+  <div class="message big">
+    <p><%= t("hands.wait_is_over") %></p>
+  </div>
+  <div class="message">
+    <p><%= t("hands.is_looking_to_help_you", name: assist.display_name) %></p>
+    <% if hand.claimed_at.present? && hand.claimed_at < 60.minutes.ago %>
+      <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn mt-3" %>
+    <% end %>
+  </div>
+</div>

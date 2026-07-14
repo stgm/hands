@@ -1,0 +1,13 @@
+algorithms:
+    name: Algorithms
+    slug: algorithms
+    link_secret: algorithms_link_secret_000000000000000
+    enrollment_open: true
+    location_type: table
+
+databases:
+    name: Databases
+    slug: databases
+    link_secret: databases_link_secret_0000000000000000
+    enrollment_open: false
+    location_type: table

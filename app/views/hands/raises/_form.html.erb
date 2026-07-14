@@ -1,0 +1,31 @@
+<%# Locals: domain, hand, membership. Ported from course-site's raises/_form. %>
+<div class="cards">
+  <%= form_with url: domain_hand_path(domain.slug), method: :post, id: "assistance-form" do |f| %>
+
+    <label for="assistance-form-question">
+      <strong class="fs-5"><%= t("hands.summary") %><br></strong>
+      <%= t("hands.briefly_summarize") %>:
+    </label>
+
+    <%= f.text_area :question, id: "assistance-form-question", class: "form-control",
+          rows: 3, required: true, placeholder: "", autofocus: true %>
+
+    <% if domain.link_mode? %>
+      <input type="text" name="location" class="form-control" required
+             placeholder="<%= t("hands.link") %>" style="margin-top:0.5em"
+             value="<%= membership.last_location %>" pattern="https://.*zoom\.us/j/.*">
+    <% elsif domain.ask_location? %>
+      <label for="assistance-form-location">
+        <strong class="fs-5"><%= t("hands.location") %><br></strong>
+        <%= t("hands.enter_location", type: domain.location_type) %>:
+      </label>
+      <input id="assistance-form-location" type="text" name="location" class="form-control"
+             required placeholder="" value="<%= membership.last_location %>">
+    <% end %>
+
+    <div class="d-grid">
+      <button id="ask-button" type="submit" class="btn"
+              data-loading-text="<%= t("hands.posting_question") %>"><%= t("hands.ask_for_assistance") %></button>
+    </div>
+  <% end %>
+</div>

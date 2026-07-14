@@ -1,0 +1,137 @@
+// Hands embed widget loader — served by the hands app, loaded by a linked
+// course-site with:
+//   <div id="hands-embed-widget"></div>
+//   <script>window.HandsEmbed = { tokenUrl, handsUrl, mount };</script>
+//   <script src="{handsUrl}/embed/widget.js" async></script>
+//
+// It never sees the shared secret: it asks course-site (same origin) for a
+// short-lived signed token and uses it to talk to the hands app cross-origin.
+// A tiny inlined Action Cable client keeps the widget live and records presence.
+(function () {
+    "use strict";
+    if (window.__handsEmbedStarted) return;
+    var cfg = window.HandsEmbed;
+    if (!cfg || !cfg.handsUrl || !cfg.tokenUrl) return;
+
+    var mount = document.querySelector(cfg.mount || "#hands-embed-widget");
+    if (!mount) return;
+    window.__handsEmbedStarted = true;
+
+    var handsBase = String(cfg.handsUrl).replace(/\/+$/, "");
+
+    // Render inside a Shadow DOM so the widget's own stylesheet (served by the
+    // hands app) fully controls its look, isolated from the host page's CSS.
+    var shadow = mount.shadowRoot || mount.attachShadow({ mode: "open" });
+    shadow.innerHTML =
+        '<link rel="stylesheet" href="' + handsBase + '/embed/widget.css">' +
+        '<div class="hands-widget" id="hands-embed-content"></div>';
+    var content = shadow.getElementById("hands-embed-content");
+
+    // Focus the question field when the dropdown is opened (Bootstrap event; a
+    // no-op if the host isn't using a Bootstrap dropdown).
+    var dropdown = mount.closest(".dropdown");
+    if (dropdown) dropdown.addEventListener("shown.bs.dropdown", focusQuestion);
+
+    function focusQuestion() {
+        var el = content.querySelector("[autofocus], textarea, input[type=text]");
+        if (el) el.focus();
+    }
+
+    // Each hands-app request/connection gets its own fresh token (single-use nonce).
+    function freshToken() {
+        return fetch(cfg.tokenUrl, { headers: { Accept: "application/json" }, credentials: "same-origin" })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (c) { return c && c.token; })
+            .catch(function () { return null; });
+    }
+
+    function render(html) {
+        content.innerHTML = html;
+        bindForms();
+        setupWaitingGif();
+        focusQuestion(); // no-op while the dropdown is closed / field hidden
+    }
+
+    // The fragment's forms point at the hands app's standalone routes; intercept
+    // them and call the token-authed embed API instead.
+    function bindForms() {
+        content.querySelectorAll("form").forEach(function (form) {
+            form.addEventListener("submit", function (e) { submitForm(e, form); }, { once: true });
+        });
+    }
+
+    // Random waiting GIF, remembered across polls (as course-site did).
+    function setupWaitingGif() {
+        var img = content.querySelector("#waiting-gif");
+        if (!img) return;
+        var url = localStorage["hands-waiting-gif"];
+        if (!url) {
+            url = (img.getAttribute("data-waiting-gif-base") || "") + "wait" + Math.floor(Math.random() * 10) + ".gif";
+            localStorage["hands-waiting-gif"] = url;
+        }
+        img.onerror = function () { img.style.display = "none"; };
+        img.src = url;
+    }
+
+    function submitForm(event, form) {
+        event.preventDefault();
+        showLoading(form);
+        var data = new FormData(form);
+        var method = (data.get("_method") || form.getAttribute("method") || "post").toLowerCase();
+        data.delete("_method");
+        var action = form.getAttribute("action") || "";
+        var endpoint = handsBase + "/embed/hand" + (action.indexOf("/set_location") !== -1 ? "/set_location" : "");
+        var httpMethod = method === "delete" ? "DELETE" : (method === "patch" ? "PATCH" : "POST");
+        freshToken().then(function (token) {
+            if (!token) return;
+            var opts = { method: httpMethod, headers: { Authorization: "Bearer " + token } };
+            if (httpMethod !== "DELETE") opts.body = data;
+            return fetch(endpoint, opts).then(function (r) {
+                if (r.ok) return r.text().then(render);
+            });
+        });
+    }
+
+    function showLoading(form) {
+        var btn = form.querySelector("[type=submit]");
+        if (btn && btn.dataset.loadingText) { btn.textContent = btn.dataset.loadingText; btn.disabled = true; }
+    }
+
+    function loadFragment() {
+        return freshToken().then(function (token) {
+            if (!token) return;
+            return fetch(handsBase + "/embed/hand", { headers: { Authorization: "Bearer " + token } })
+                .then(function (r) { if (r.ok) return r.text().then(render); });
+        });
+    }
+
+    // Minimal Action Cable client: subscribe to WidgetChannel for live updates
+    // (which also records "widget open" presence) and heartbeat to stay present.
+    function openCable() {
+        freshToken().then(function (token) {
+            if (!token) return;
+            var ws = new WebSocket(handsBase.replace(/^http/, "ws") + "/cable?token=" + encodeURIComponent(token));
+            var identifier = JSON.stringify({ channel: "WidgetChannel", source_label: "embed" });
+            var heartbeat;
+
+            ws.addEventListener("message", function (ev) {
+                var msg = JSON.parse(ev.data);
+                if (msg.type === "welcome") {
+                    ws.send(JSON.stringify({ command: "subscribe", identifier: identifier }));
+                } else if (msg.type === "confirm_subscription") {
+                    heartbeat = setInterval(function () {
+                        ws.send(JSON.stringify({ command: "message", identifier: identifier, data: JSON.stringify({ action: "appear" }) }));
+                    }, 30000);
+                } else if (msg.message && msg.message.html) {
+                    render(msg.message.html);
+                }
+            });
+            ws.addEventListener("close", function () {
+                clearInterval(heartbeat);
+                setTimeout(openCable, 3000); // reconnect with a fresh token
+            });
+        });
+    }
+
+    loadFragment().then(openCable);
+})();

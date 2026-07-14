@@ -1,0 +1,14 @@
+teacher_algorithms:
+    user: teacher
+    course_domain: algorithms
+    role: teacher
+
+ta_algorithms:
+    user: ta
+    course_domain: algorithms
+    role: assistant
+
+student_algorithms:
+    user: student
+    course_domain: algorithms
+    role: student

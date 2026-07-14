@@ -1,0 +1,9 @@
+<% content_for :title, "Queue — #{current_course_domain.name}" %>
+<% content_for :app_icon, "🙋" %>
+<% content_for :app_title, "Queue" %>
+<% content_for :app_subtitle, current_course_domain.name %>
+
+<%= turbo_stream_from current_course_domain, :queue %>
+<div id="queue" class="h-100 d-flex flex-column">
+  <%= render "hands/queue/lists", hands: @hands, course_domain: current_course_domain %>
+</div>

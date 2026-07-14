@@ -1,0 +1,53 @@
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t("hello") %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
+#
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
+#
+#     en:
+#       "yes": yup
+#       enabled: "ON"
+
+en:
+  hello: "Hello world"
+  hands:
+    assistance: Assistance
+    request_assistance_in_class: "Request assistance in class!"
+    good_morning: "Good morning"
+    good_afternoon: "Good afternoon"
+    good_evening: "Good evening"
+    good_night: "Good night"
+    lets_check_you_in: "Let's check you in."
+    entering_location: "Entering your %{location_type} helps to register attendance"
+    save_my_location: "Save my location"
+    summary: "Summary"
+    location: "Location"
+    briefly_summarize: "Provide a summary of what you would like to discuss"
+    enter_location: "Enter your location"
+    ask_for_assistance: "Ask for assistance"
+    posting_question: "Sending request..."
+    you_are_number_1_in_line: "You are number %{number} in line."
+    wait_is_over: "The wait is over!"
+    is_looking_to_help_you: "%{name} is looking to assist you right now."
+    cancel_request: "Cancel request"
+    link: "Provide your Zoom link"
+    in_line: "We ask that you wait a bit because you were helped just recently and it's quite busy!"

@@ -1,0 +1,136 @@
+// Card system used inside the mini app (ported from course-site's miniapp.scss
+// and assistance.scss). The student widget partials render with these styles on
+// the standalone page; the *embedded* widget instead gets the compact popup
+// styling from embed/widget.css inside its Shadow DOM.
+
+.mini-app {
+    // We assume either 1 or 2 cards arranged vertically
+    .cards {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        width: 100%;
+        height: 100%;
+    }
+
+    // If first card is an image it assumes the image's natural height
+    .cards:has(> img:first-child) {
+        grid-template-rows: minmax(0, auto) 1fr;
+    }
+
+    .cards:has(> :only-child) {
+        grid-template-rows: 1fr;
+    }
+
+    .cards div.message > :only-child { margin: 0; }
+
+    .cards div.message:has(> :only-child),
+    .cards div.message.big { justify-content: center; }
+
+    .cards div.message p { font-size: larger; }
+
+    .cards div.message.big p {
+        font-size: calc(1.425rem + 2.1vw);
+        font-weight: 300;
+        line-height: 1.25;
+    }
+
+    .cards .btn {
+        color: #000;
+        background-color: #ffc107;
+        border-color: #ffc107;
+        margin: 0.5rem;
+        font-weight: bolder;
+    }
+
+    .cards > div, .cards > form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .cards > img {
+        border-radius: 40px;
+        rotate: -0.5deg;
+    }
+
+    .cards > img:first-child { width: 100%; }
+
+    .cards .message {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    @media (max-width: 767px) {
+        .cards {
+            & > :first-child { rotate: -1deg; }
+            & > :last-child { rotate: 0.75deg; }
+            & > :only-child { rotate: none; }
+        }
+
+        .cards > div, .cards > form {
+            border-radius: 40px;
+            background: linear-gradient(170deg, #CAEAFF, #BAF7C8) fixed !important;
+            padding: 1.5rem;
+        }
+
+        .cards > :first-child {
+            background: linear-gradient(180deg, #CAEAFF, #E2F4FF) fixed !important;
+        }
+
+        .cards > :nth-child(2) { margin-top: -0.25rem; }
+
+        .cards > img:first-child {
+            width: 95%;
+            margin: 0 auto;
+            min-height: 70%;
+            border-radius: 40px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .cards { row-gap: 2rem; }
+    }
+}
+
+// The staff queue list (ported from assistance.scss's .hands-app)
+.hands-app {
+    display: flex;
+    flex-direction: column;
+
+    .message {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        h5 { margin-top: -4rem; text-align: center; }
+    }
+
+    .list-group-item {
+        padding: 2rem;
+        border: 0 !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .hands-show {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        p { flex: 1 1 auto; }
+    }
+
+    @media (max-width: 767px) {
+        .hands-show {
+            background: linear-gradient(170deg, #CAEAFF, #BAF7C8) fixed !important;
+            border-radius: 40px;
+            height: 100%;
+            padding: 2rem;
+        }
+    }
+}
+
+// The student widget fills its card on the standalone page.
+#hand_widget { height: 100%; }

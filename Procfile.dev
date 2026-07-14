@@ -1,0 +1,2 @@
+web: bin/rails server -p 3000 -b 'ssl://0.0.0.0:3000?key=config/ssl/localhost.key&cert=config/ssl/localhost.crt'
+css: bin/rails dartsass:watch

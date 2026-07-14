@@ -1,0 +1,34 @@
+<% content_for :title, @course_domain.name %>
+<% content_for :app_icon, "✋" %>
+<% content_for :app_title, @course_domain.name %>
+<% content_for :app_subtitle, acting_staff? ? "Staff" : "Assistance" %>
+
+<div class="list-group">
+  <% if current_membership %>
+    <%= link_to "Ask a question", domain_hand_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+  <% end %>
+
+  <% if acting_staff? %>
+    <%= link_to "Open the queue", domain_queue_hands_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <%= link_to "Attendance", domain_attendance_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <%= link_to "Notes", domain_notes_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <% if acting_senior? %>
+      <%= link_to "Manage staff", domain_staff_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <% end %>
+  <% end %>
+</div>
+
+<% unless current_membership || acting_staff? %>
+  <div class="message">
+    <% if @course_domain.enrollment_open? %>
+      <h5>You are not a member of<br><%= @course_domain.name %> yet.</h5>
+    <% else %>
+      <h5>Enrollment is closed.<br><small class="text-body-secondary">Use the widget in your course site, or ask a teacher.</small></h5>
+    <% end %>
+  </div>
+  <% if @course_domain.enrollment_open? %>
+    <div class="d-grid">
+      <%= button_to "Join #{@course_domain.name}", domain_join_path(@course_domain.slug), method: :post, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>

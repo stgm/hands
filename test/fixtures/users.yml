@@ -1,0 +1,21 @@
+admin:
+    email: admin@example.com
+    name: Admin User
+    admin: true
+
+teacher:
+    email: teacher@example.com
+    name: Terry Teacher
+
+ta:
+    email: ta@example.com
+    name: Tanya Assistant
+
+student:
+    email: student@example.com
+    name: Sam Student
+    student_number: "12345678"
+
+outsider:
+    email: outsider@example.com
+    name: Olive Outsider

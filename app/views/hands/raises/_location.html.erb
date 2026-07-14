@@ -1,0 +1,18 @@
+<%# Locals: domain, greeting. Ported from course-site's raises/_location. %>
+<div class="cards">
+  <div class="message big">
+    <p><%= greeting %>!<br><%= t("hands.lets_check_you_in") %></p>
+  </div>
+  <%= form_with url: set_location_domain_hand_path(domain.slug), method: :patch, id: "location-form" do %>
+    <div></div>
+    <div>
+      <label for="location-text-field">
+        <%= t("hands.entering_location", location_type: domain.location_type) %>:
+      </label>
+      <input id="location-text-field" type="text" name="location" class="form-control"
+             required autofocus placeholder="<%= domain.location_type %>">
+    </div>
+    <button id="loc-button" type="submit" class="btn"
+            data-loading-text="<%= t("hands.posting_question") %>"><%= t("hands.save_my_location") %></button>
+  <% end %>
+</div>

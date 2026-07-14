@@ -1,0 +1,103 @@
+// A "mini app" is an app optimized for small sizes (e.g. phones). On desktop,
+// the full content is framed visually so it doesn't look weird.
+// Ported from course-site's includes/miniapp.scss.
+
+body.mini-app {
+    background-color: #F4F9FF;
+    min-height: 100dvh;
+
+    display: grid;
+    grid-template-areas: "navbar" "main";
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 1fr;
+}
+
+body.mini-app:not(:has(#navbar)) {
+    grid-template-areas: "main";
+    grid-template-rows: 1fr;
+}
+
+#navbar { grid-area: navbar; }
+
+// base container that will be framed on desktop, contains header + body
+.mini-app-container {
+    justify-self: center;
+    align-self: center;
+
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 1rem;
+
+    grid-area: main;
+}
+
+.mini-app-header {
+    display: grid;
+    grid: 'a b' 'a c';
+    grid-template-columns: 3rem 1fr;
+    column-gap: 0.5rem;
+
+    .icon, svg { grid-area: a; font-size: 2rem; line-height: 1; }
+    h1 { grid-area: b; font-size: 2rem; margin-top: -0.25ex; }
+    h3 { grid-area: c; font-size: 1rem; }
+
+    > * { margin: 0; }
+}
+
+.mini-app-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+
+    // overflow-y:auto also clips the x axis, which would cut off focus rings
+    // (Bootstrap draws them as a 0.25rem box-shadow *outside* the input box).
+    // Give them room, then pull the content back into alignment.
+    padding-inline: 0.35rem;
+    margin-inline: -0.35rem;
+
+    .btn, button {
+        border-radius: 50px !important;
+    }
+
+    a.list-group-item, .list-group-item {
+        border-radius: 40px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .mini-app-container {
+        // on mobile the app is just a full-screen div
+        height: 100%;
+        width: 100%;
+        padding: 1rem 1rem 1.5rem 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .mini-app-container {
+        // here the app is a visual "card" on a blank page
+        height: 80%;
+        width: 33%;
+        min-width: 30rem;
+
+        border: 1px solid #eff;
+        border-radius: 40px;
+
+        background: linear-gradient(180deg, #E3F1FF, #FFFBE2) fixed !important;
+        box-shadow: 0px 10px 40px 9px rgba(0, 0, 0, 0.1);
+
+        overflow: hidden;
+
+        padding: 2rem;
+        row-gap: 2rem;
+    }
+
+    // Data-heavy staff/admin pages (tables, rosters) need more room than the
+    // narrow phone-shaped card, while keeping the same framing.
+    .mini-app-container.wide {
+        width: 80%;
+        max-width: 64rem;
+        min-width: 30rem;
+    }
+}

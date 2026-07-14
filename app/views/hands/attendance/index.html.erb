@@ -1,0 +1,30 @@
+<% content_for :title, "Attendance — #{current_course_domain.name}" %>
+<% content_for :wide, true %>
+<% content_for :app_icon, "👀" %>
+<% content_for :app_title, "Who's here" %>
+<% content_for :app_subtitle, "#{current_course_domain.name} — #{@present.size} with the widget open" %>
+
+<% if @present.any? %>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th><%= current_course_domain.location_type.to_s.capitalize %></th>
+          <th>Student</th><th>Source</th><th>Since</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @present.each do |presence| %>
+          <tr>
+            <td><%= presence.location.presence || "—" %></td>
+            <td><%= presence.membership.display_name %></td>
+            <td><span class="badge bg-light text-dark"><%= presence.source_label.presence || "direct" %></span></td>
+            <td class="small text-body-secondary"><%= time_ago_in_words(presence.connected_at) %> ago</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="message"><h5>Nobody has the widget open right now.</h5></div>
+<% end %>

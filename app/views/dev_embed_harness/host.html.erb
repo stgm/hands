@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Embed harness</title></head>
+  <body>
+    <h1>Embed harness (dev)</h1>
+    <div id="hands-embed-widget" style="max-width:360px;border:1px solid #ccc;padding:8px">Loading…</div>
+    <script>
+      window.HandsEmbed = { tokenUrl: "/dev/embed_token", handsUrl: window.location.origin, mount: "#hands-embed-widget" };
+    </script>
+    <script src="/embed/widget.js" async></script>
+  </body>
+</html>

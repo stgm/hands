@@ -1,0 +1,36 @@
+<% content_for :title, "Hands" %>
+<% content_for :app_icon, "✋" %>
+<% content_for :app_title, "Hands" %>
+<% content_for :app_subtitle, logged_in? ? current_user.display_name : "Ask questions and get help in class" %>
+
+<% if logged_in? %>
+  <div class="list-group">
+    <% @domains.each do |domain| %>
+      <%= link_to domain.name, domain_root_path(domain.slug), class: "list-group-item list-group-item-action" %>
+    <% end %>
+
+    <% if @domains.none? %>
+      <div class="list-group-item text-body-secondary">
+        You are not a member of any course domain yet.
+      </div>
+    <% end %>
+
+    <% if current_user.admin? %>
+      <%= link_to "Manage domains", admin_course_domains_path, class: "list-group-item list-group-item-action" %>
+    <% end %>
+
+    <%# No profile link: the profile is only filled in once, on first sign in
+        (require_login redirects there while the name is still blank). %>
+
+    <%# button_to wraps the button in a form; make it block so the item fills the row. %>
+    <%= button_to "Sign out", logout_path, method: :delete, form_class: "d-block",
+          class: "list-group-item list-group-item-action text-danger w-100 text-start" %>
+  </div>
+<% else %>
+  <div class="message">
+    <h5>Ask questions and get<br> help in class.</h5>
+  </div>
+  <div class="d-grid">
+    <%= link_to "Sign in", auth_mail_login_path, class: "btn btn-primary" %>
+  </div>
+<% end %>

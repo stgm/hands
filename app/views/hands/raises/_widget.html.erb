@@ -1,0 +1,5 @@
+<%# Locals: state, hand, position, assist, domain, membership, greeting.
+    The wrapping node id must stay stable so realtime updates can replace it. %>
+<%= render "hands/raises/#{state}",
+      hand: hand, position: position, assist: assist,
+      domain: domain, membership: membership, greeting: greeting %>

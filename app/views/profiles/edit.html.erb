@@ -1,0 +1,19 @@
+<% content_for :title, "Your profile" %>
+<% content_for :app_icon, "🙂" %>
+<% content_for :app_title, "Your profile" %>
+<p class="text-body-secondary">We need your name so staff can recognise you in the queue.</p>
+
+<%= form_with model: @user, url: profile_path, method: :patch do |f| %>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger"><%= @user.errors.full_messages.to_sentence %></div>
+  <% end %>
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, required: true, autofocus: true, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :student_number, "Student number (optional)", class: "form-label" %>
+    <%= f.text_field :student_number, class: "form-control" %>
+  </div>
+  <%= f.submit "Save", class: "btn btn-primary" %>
+<% end %>

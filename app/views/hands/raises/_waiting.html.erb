@@ -1,0 +1,8 @@
+<%# Locals: domain, hand, position. Ported from course-site's raises/_waiting. %>
+<div class="cards">
+  <img id="waiting-gif" data-waiting-gif-base="https://fotos.mprog.nl/waiting-gifs/" src="" alt="">
+  <div class="message text-center">
+    <p><%= t("hands.you_are_number_1_in_line", number: position) %></p>
+    <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn" %>
+  </div>
+</div>

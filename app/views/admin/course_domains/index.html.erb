@@ -1,0 +1,30 @@
+<% content_for :title, "Course domains" %>
+<% content_for :wide, true %>
+<% content_for :app_icon, "🏫" %>
+<% content_for :app_title, "Course domains" %>
+<% content_for :app_subtitle, "Site administration" %>
+
+<div class="mb-3 text-end">
+  <%= link_to "New course domain", new_admin_course_domain_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @course_domains.any? %>
+  <table class="table align-middle">
+    <thead>
+      <tr><th>Name</th><th>Slug</th><th>Enrollment</th><th>Members</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% @course_domains.each do |domain| %>
+        <tr>
+          <td><%= link_to domain.name, domain_root_path(domain.slug) %></td>
+          <td><code><%= domain.slug %></code></td>
+          <td><%= domain.enrollment_open? ? "Open" : "Closed" %></td>
+          <td><%= domain.memberships.count %></td>
+          <td class="text-end"><%= link_to "Edit", edit_admin_course_domain_path(domain), class: "btn btn-sm btn-outline-secondary" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="text-body-secondary">No course domains yet.</p>
+<% end %>

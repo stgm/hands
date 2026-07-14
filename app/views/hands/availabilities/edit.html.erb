@@ -1,0 +1,14 @@
+<% content_for :title, "Availability" %>
+<% content_for :app_icon, "⏰" %>
+<% content_for :app_title, "Availability" %>
+<% content_for :app_subtitle, current_course_domain.name %>
+
+<p class="text-body-secondary">Assistants must be available to see the queue. Teachers and admins always can.</p>
+<%= form_with url: domain_availability_path(current_course_domain.slug), method: :patch do |f| %>
+  <div class="d-grid gap-2">
+    <% [30, 60, 120, 240].each do |m| %>
+      <%= f.submit "#{m} min", name: "minutes", value: m, class: "btn btn-primary" %>
+    <% end %>
+    <%= f.submit "I'm done for today", name: "minutes", value: 0, class: "btn btn-secondary" %>
+  </div>
+<% end %>
