@@ -35,6 +35,10 @@ class Hand < ApplicationRecord
         update(done: true, success: success, evaluation: evaluation, note: note, closed_at: Time.current)
     end
 
+    def cancel!
+        update(done: true, closed_at: Time.current)
+    end
+
     def duration
         closed_at.present? && claimed_at.present? ? ((closed_at - claimed_at) / 60.0).round : 0
     end

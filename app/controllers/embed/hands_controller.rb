@@ -19,7 +19,7 @@ class Embed::HandsController < Embed::BaseController
 
     # DELETE /embed/hand — cancel the current question
     def destroy
-        current_membership.hands.open.update_all(done: true, closed_at: Time.current)
+        current_membership.hands.open.each(&:cancel!)
         render_fragment
     end
 

@@ -22,7 +22,7 @@ class Hands::RaisesController < ApplicationController
 
     # DELETE /<slug>/hand — cancel the current question (soft close)
     def destroy
-        current_membership.hands.open.update_all(done: true, closed_at: Time.current)
+        current_membership.hands.open.each(&:cancel!)
         render_widget
     end
 
