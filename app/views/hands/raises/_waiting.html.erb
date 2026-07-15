@@ -4,6 +4,7 @@
         data: { waiting_gif_urls: waiting_gif_urls, waiting_gif_key: WaitingGifsHelper::KEY_HEX } %>
   <div class="message text-center">
     <p><%= t("hands.you_are_number_1_in_line", number: position) %></p>
-    <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn" %>
+    <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn",
+          form: { data: { turbo_confirm: "Cancel your request?" } } %>
   </div>
 </div>

@@ -53,6 +53,13 @@ body.mini-app {
 
 .mini-app-body {
     flex: 1 1 auto;
+    // Flex items default to min-height:auto (content-based), which stops a
+    // scrolling item from shrinking below its content's height — the item
+    // (and its ancestors, up to the viewport-height body) would just grow
+    // past the available space instead of scrolling internally. min-height:0
+    // lets it settle to the space actually left over by the header/flash/
+    // footer siblings, so overflow-y:auto below can do its job.
+    min-height: 0;
     overflow-y: auto;
     // overflow-y:auto implicitly makes overflow-x behave as auto too, so any
     // horizontal bleed (see below) would show a scrollbar. Explicit `clip`

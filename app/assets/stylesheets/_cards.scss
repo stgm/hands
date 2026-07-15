@@ -186,5 +186,20 @@
     }
 }
 
+// Empty queue state: shown via generated content instead of DOM markup, same
+// technique as the empty states in _notes.scss/_all_students.scss.
+#queue:not(:has(li)) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    &::before {
+        content: "No requests. Go and find a student to talk to! ❤️";
+        max-width: 16rem;
+        font-size: 1.25rem;
+    }
+}
+
 // The student widget fills its card on the standalone page.
 #hand_widget { height: 100%; }

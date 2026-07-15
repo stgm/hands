@@ -56,18 +56,15 @@ export default class extends Controller {
     Turbo.visit(link.href)
   }
 
+  // The "no matches" empty state is CSS-driven off [hidden] (see
+  // :has(li:not([hidden])) in _all_students.scss), so this only needs to
+  // toggle the cards themselves.
   apply() {
     const query = this.inputTarget.value.trim().toLowerCase()
     const cards = this.gridTarget.querySelectorAll("[data-filter-name]")
-    let visibleCount = 0
 
     cards.forEach((card) => {
-      const matches = query.length === 0 || card.dataset.filterName.includes(query)
-      card.hidden = !matches
-      if (matches) visibleCount++
+      card.hidden = !(query.length === 0 || card.dataset.filterName.includes(query))
     })
-
-    const emptyState = this.gridTarget.querySelector(".attendance-empty-filter")
-    if (emptyState) emptyState.hidden = cards.length === 0 || visibleCount > 0
   }
 }

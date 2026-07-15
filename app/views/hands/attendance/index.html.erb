@@ -7,11 +7,9 @@
 
 <% content_for :container_data do %>data-controller="filter"<% end %>
 
-<div class="mini-app-body hands-app">
-  <div id="attendance" class="attendance" data-filter-target="grid">
-    <%= render "hands/attendance/grid", students: @students, presences_by_membership: @presences_by_membership, course_domain: current_course_domain %>
-  </div>
-</div>
+<ul id="attendance" class="mini-app-body menu attendance-grid" role="list" data-filter-target="grid">
+  <%= render "hands/attendance/grid", students: @students, presences_by_membership: @presences_by_membership, course_domain: current_course_domain %>
+</ul>
 
 <div class="mini-app-footer">
   <input type="text" class="form-control attendance-filter"

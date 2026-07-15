@@ -11,10 +11,16 @@ domain = CourseDomain.find_or_create_by!(slug: "demo") do |d|
 end
 
 student = User.find_or_create_by!(email: "student@example.com") { |u| u.name = "Sam Student"; u.student_number = "12345678" }
+student1 = User.find_or_create_by!(email: "student1@example.com") { |u| u.name = "Bor Student"; u.student_number = "12345678" }
+student2 = User.find_or_create_by!(email: "student2@example.com") { |u| u.name = "Cor Student"; u.student_number = "12345678" }
+student3 = User.find_or_create_by!(email: "student3@example.com") { |u| u.name = "Dor Student"; u.student_number = "12345678" }
 ta      = User.find_or_create_by!(email: "ta@example.com") { |u| u.name = "Tanya TA" }
 teacher = User.find_or_create_by!(email: "teacher@example.com") { |u| u.name = "Terry Teacher" }
 
 domain.memberships.find_or_create_by!(user: student) { |m| m.role = :student }
+domain.memberships.find_or_create_by!(user: student1) { |m| m.role = :student }
+domain.memberships.find_or_create_by!(user: student2) { |m| m.role = :student }
+domain.memberships.find_or_create_by!(user: student3) { |m| m.role = :student }
 domain.memberships.find_or_create_by!(user: ta) { |m| m.role = :assistant }
 domain.memberships.find_or_create_by!(user: teacher) { |m| m.role = :teacher }
 

@@ -1,20 +1,16 @@
 <%# Locals: hands, course_domain. Viewer-independent so one broadcast updates
-    every staff screen identically. Claimed requests sort first, as in course-site. %>
+    every staff screen identically. Claimed requests sort first, as in course-site.
+    Rendered directly into #queue's <ul> (see queue/index.html.erb); the empty
+    state is CSS-generated content on #queue itself when this renders nothing. %>
 <% claimed = hands.reject { |h| h.assist_membership_id.nil? } %>
 <% waiting = hands.select { |h| h.assist_membership_id.nil? } %>
 
-<% if hands.none? %>
-  <div class="message">
-    <h5>No requests. Go and find<br> a student to talk to! ❤️</h5>
-  </div>
-<% else %>
-  <div class="list-group">
-    <% (claimed + waiting).each do |hand| %>
-      <%= link_to domain_queue_hand_path(course_domain.slug, hand),
-            id: dom_id(hand),
-            class: "list-group-item list-group-item-action #{'active' if hand.assist} #{'bg-warning' if hand.helpline?}" do %>
-        <%= render "hands/queue/hand", hand: hand, course_domain: course_domain %>
-      <% end %>
+<% (claimed + waiting).each do |hand| %>
+  <li>
+    <%= link_to domain_queue_hand_path(course_domain.slug, hand),
+          id: dom_id(hand),
+          class: "#{'menu-item--active' if hand.assist} #{'bg-warning' if hand.helpline?}" do %>
+      <%= render "hands/queue/hand", hand: hand, course_domain: course_domain %>
     <% end %>
-  </div>
+  </li>
 <% end %>

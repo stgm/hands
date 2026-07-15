@@ -1,27 +1,46 @@
 // Staff "All students" page: a grid of every student, with live presence
 // highlighting and a client-side name filter (filter_controller.js).
 
-.attendance-filter {
-    /* margin-bottom: 1rem; */
+// .attendance-grid is a .menu (see _menu.scss) laid out as two columns
+// instead of one; item padding/radius/hover already come from .menu, this
+// just adds the roster-specific card look and presence highlighting.
+.menu.attendance-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    a { padding: 1.25rem 1.5rem; }
 }
 
-.attendance-grid {
-    .student-card {
-        // Match the rounded look of the question queue's list items.
-        border: none;
-        border-radius: 40px !important;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-        min-height: 8rem;
+.student-card {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    min-height: 8rem;
+}
 
-        .card-body {
-            padding: 1.25rem 1.5rem;
-        }
-    }
+.student-card--present {
+    background-color: #EAFBEF;
+    border-color: #8FD9A3;
+}
 
-    .student-card--present {
-        background-color: #EAFBEF;
-        border-color: #8FD9A3;
-    }
+// Two distinct empty states, both rendered via generated content instead of
+// DOM markup (same technique as _notes.scss/_cards.scss): no students in the
+// course at all (no <li>s to render) vs. every student filtered out by the
+// search box (filter_controller.js sets [hidden] on non-matching cards, so
+// the list still :has(li) but none of them are visible).
+.attendance-grid:not(:has(li)),
+.attendance-grid:has(li):not(:has(li:not([hidden]))) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.attendance-grid:not(:has(li))::before {
+    content: "No students in this course yet.";
+    color: var(--bs-secondary-color);
+}
+
+.attendance-grid:has(li):not(:has(li:not([hidden])))::before {
+    content: "No students match that filter.";
+    color: var(--bs-secondary-color);
 }
 
 .status-dot {

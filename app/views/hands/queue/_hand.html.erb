@@ -2,15 +2,6 @@
 <% if hand.assist %>
   <span class="float-end badge bg-secondary"><%= hand.assist.display_name %></span>
 <% end %>
-<h5><strong><%= hand.user.display_name %></strong></h5>
-<p>
-  <small>
-    waiting for <%= ((Time.current - hand.created_at) / 60).round %> minutes
-    <% if hand.location.present? %>
-      <br><%= course_domain.location_type %>: <%= hand.location %>
-    <% end %>
-  </small>
-</p>
 <p>
   <% if hand.subject.present? %><strong><%= hand.subject %></strong>&mdash;<% end %><%= hand.help_question %>
 </p>

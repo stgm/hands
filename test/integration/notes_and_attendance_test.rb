@@ -54,7 +54,7 @@ class NotesAndAttendanceTest < ActionDispatch::IntegrationTest
         sign_in_as(users(:ta))
         get domain_student_notes_path(@domain.slug, student.id)
         assert_response :success
-        assert_select ".list-group-item", text: /Solid work/
+        assert_select ".note-item", text: /Solid work/
     end
 
     test "attendance grid marks students with an open widget as present and reaps stale ones" do

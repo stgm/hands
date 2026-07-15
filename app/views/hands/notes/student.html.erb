@@ -5,13 +5,13 @@
 <% content_for :app_subtitle, "#{current_course_domain.name}" %>
 
 <div class="mini-app-body hands-app notes-page" data-controller="chat" data-action="disclosure:toggle@window->chat#scrollToBottom" data-chat-target="messages">
-  <ul class="list-group notes-list"><% @notes.each do |note| -%>
-    <li class="list-group-item note-item">
+  <ul class="notes-list"><% @notes.each do |note| -%>
+    <li class="note-item">
       <% if note.author %>
-        <div class="note-author small text-body-secondary"><%= note.author.display_name %></div>
+        <div class="note-author"><%= note.author.display_name %></div>
       <% end %>
       <div class="note-bubble"><%= note.text %></div>
-      <div class="note-time small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></div>
+      <div class="note-time"><%= note.created_at.strftime("%-d %b %H:%M") %></div>
     </li>
   <% end -%></ul>
 </div>
@@ -20,16 +20,16 @@
     <div data-disclosure-target="content" hidden class="add-note-form">
       <%= form_with url: domain_notes_path(current_course_domain.slug), method: :post do |f| %>
         <%= hidden_field_tag :membership_id, @membership.id %>
-        <div class="mb-2">
+        <div class="note-field">
           <%= f.rich_text_area :text, required: true %>
         </div>
-        <div class="text-end">
-          <%= f.submit "Save note", class: "btn btn-primary btn-sm" %>
+        <div class="note-form-actions">
+          <%= f.button "Save note", class: "note-submit" %>
         </div>
       <% end %>
     </div>
 
-    <button type="button" class="btn btn-primary btn-sm w-100" data-disclosure-target="trigger" data-action="disclosure#toggle">
+    <button type="button" class="note-toggle-btn" data-disclosure-target="trigger" data-action="disclosure#toggle">
       +
     </button>
 </div>

@@ -1,0 +1,72 @@
+// Simple UL > LI > A/BUTTON navigation menu, styled from scratch with no
+// Bootstrap list-group dependency. Base layout is a single-column grid;
+// pages that need more columns (e.g. the all-students roster) override
+// grid-template-columns on top of this, so the item styling stays shared.
+//
+// padding: 0 here (specificity 0,1,0) always beats Bootstrap reboot's plain
+// `ul { padding-left: 2rem; }` (0,0,1). But when .menu is used directly as
+// .mini-app-body (queue, attendance — a direct child of .mini-app-container),
+// it ties in specificity with .mini-app-container > *'s own padding-inline
+// rule in _miniapp.scss, so this file must be @import-ed *before* "miniapp"
+// in application.scss — the later rule wins the tie and re-applies the
+// container's inline padding on those direct-child menus, while nested menus
+// (inside a <nav>, see home/domains) are untouched by that rule and just
+// keep this reset.
+.menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 0.5rem;
+
+    li { margin: 0; }
+
+    a, button, form { display: block; width: 100%; }
+
+    a, button {
+        padding: 2rem;
+        border: none;
+        border-radius: 40px;
+        background-color: #fff;
+        color: inherit;
+        text-align: left;
+        text-decoration: none;
+        transition: background-color 0.15s ease;
+
+        &:hover, &:focus-visible {
+            background-color: #f8f9fa;
+        }
+    }
+
+    .menu-message {
+        padding: 2rem;
+        color: var(--bs-secondary-color);
+    }
+
+    // Currently-selected/claimed item (e.g. a queue request someone is
+    // helping with), replacing Bootstrap's .list-group-item.active.
+    .menu-item--active {
+        background-color: $primary;
+        color: #fff;
+
+        &:hover, &:focus-visible {
+            background-color: $primary;
+        }
+    }
+
+    // Brief on-off-on-off highlight applied by the "menu" Stimulus controller
+    // just before a number-key shortcut follows through, mirroring macOS's
+    // menu blink. Hard cuts (paired keyframes at the same %) rather than a
+    // fade, so it reads as a blink and not a glow.
+    .menu-item--flash {
+        animation: menu-item-flash 200ms steps(1, end);
+    }
+}
+
+@keyframes menu-item-flash {
+    0%, 33% { background-color: $primary; color: #fff; }
+    34%, 66% { background-color: #fff; color: inherit; }
+    67%, 100% { background-color: $primary; color: #fff; }
+}

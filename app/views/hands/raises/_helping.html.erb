@@ -6,7 +6,8 @@
   <div class="message">
     <p><%= t("hands.is_looking_to_help_you", name: assist.display_name) %></p>
     <% if hand.claimed_at.present? && hand.claimed_at < 60.minutes.ago %>
-      <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn mt-3" %>
+      <%= button_to t("hands.cancel_request"), domain_hand_path(domain.slug), method: :delete, class: "btn mt-3",
+            form: { data: { turbo_confirm: "Cancel your request?" } } %>
     <% end %>
   </div>
 </div>

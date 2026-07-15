@@ -17,6 +17,12 @@ $min-contrast-ratio: 3;
 // App-wide basics (button shapes, etc.) not specific to any one view.
 @import "basics";
 
+// Imported before "miniapp" so its .mini-app-container > * padding-inline
+// rule (equal specificity to .menu's own padding reset) wins the cascade
+// tie when a .menu is used directly as .mini-app-body — see the comment atop
+// _menu.scss for the full explanation.
+@import "menu";
+
 // The "mini app" shell: full-screen on phones, a framed card on desktop.
 @import "miniapp";
 @import "cards";
