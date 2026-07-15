@@ -15,17 +15,16 @@
         <li class="menu-message">You are not a member of any course domain yet.</li>
       <% end %>
 
-      <% if current_user.admin? %>
-        <li><%= link_to "Manage domains", admin_course_domains_path %></li>
-      <% end %>
-
-      <%# No profile link: the profile is only filled in once, on first sign in
-          (require_login redirects there while the name is still blank). %>
-
-      <li><%= button_to "Sign out", logout_path, method: :delete, class: "text-danger",
-            form: { data: { turbo_confirm: "Sign out?" } } %></li>
     </ul>
   </nav>
+  <div class="mini-app-footer">
+    <% if current_user.admin? %>
+        <%= link_to "Manage domains", admin_course_domains_path, class: "action" %>
+    <% end %>
+
+    <%= button_to "Sign out", logout_path, method: :delete, class: "action text-danger",
+          form: { data: { turbo_confirm: "Sign out?" } } %>
+  </div>
 <% else %>
   <div class="mini-app-body hands-app home-page">
     <div class="home-hero">
@@ -33,9 +32,6 @@
       <h5>Ask questions and get<br> help in class.</h5>
     </div>
   </div>
-<% end %>
-
-<% unless logged_in? %>
   <div class="mini-app-footer">
     <%= link_to "Sign in", auth_mail_login_path, class: "btn btn-primary w-100" %>
   </div>

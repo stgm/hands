@@ -4,20 +4,20 @@
   <li data-filter-name="<%= student.display_name.downcase %>">
     <%= link_to domain_student_notes_path(course_domain.slug, student.id),
           class: "student-card #{"student-card--present" if present}" do %>
-      <div class="d-flex justify-content-between align-items-start gap-2">
-        <h6 class="card-title mb-1"><%= student.display_name %></h6>
+      <div class="student-card__header">
+        <h6 class="student-card__name"><%= student.display_name %></h6>
         <span class="status-dot <%= present ? "status-dot--present" : "status-dot--away" %>" aria-hidden="true"></span>
       </div>
       <% if present %>
         <% presences.each do |presence| %>
-          <div class="small text-body-secondary">
+          <div class="student-card__detail">
             <%= presence.location.presence || course_domain.location_type.to_s.capitalize %>
-            <span class="badge bg-light text-dark"><%= presence.source_label.presence || "direct" %></span>
+            <span class="student-card__source"><%= presence.source_label.presence || "direct" %></span>
             · <%= time_ago_in_words(presence.connected_at) %> ago
           </div>
         <% end %>
       <% else %>
-        <div class="small text-body-secondary">Not here</div>
+        <div class="student-card__detail">Not here</div>
       <% end %>
     <% end %>
   </li>

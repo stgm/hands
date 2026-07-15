@@ -1,9 +1,7 @@
 // Staff "All students" page: a grid of every student, with live presence
 // highlighting and a client-side name filter (filter_controller.js).
 
-// .attendance-grid is a .menu (see _menu.scss) laid out as two columns
-// instead of one; item padding/radius/hover already come from .menu, this
-// just adds the roster-specific card look and presence highlighting.
+// adds to the default menu styling from _menu.scss
 .menu.attendance-grid {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
@@ -21,11 +19,37 @@
     border-color: #8FD9A3;
 }
 
-// Two distinct empty states, both rendered via generated content instead of
-// DOM markup (same technique as _notes.scss/_cards.scss): no students in the
-// course at all (no <li>s to render) vs. every student filtered out by the
-// search box (filter_controller.js sets [hidden] on non-matching cards, so
-// the list still :has(li) but none of them are visible).
+.student-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.student-card__name {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.student-card__detail {
+    font-size: 0.875em;
+    color: var(--bs-secondary-color);
+}
+
+.student-card__source {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    font-size: 0.75em;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+// empty states
 .attendance-grid:not(:has(li)),
 .attendance-grid:has(li):not(:has(li:not([hidden]))) {
     display: flex;
@@ -33,11 +57,13 @@
     justify-content: center;
 }
 
+// empty state when the list contains no students to begin with
 .attendance-grid:not(:has(li))::before {
     content: "No students in this course yet.";
     color: var(--bs-secondary-color);
 }
 
+// empty state when all students have been filtered out
 .attendance-grid:has(li):not(:has(li:not([hidden])))::before {
     content: "No students match that filter.";
     color: var(--bs-secondary-color);

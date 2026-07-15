@@ -31,6 +31,12 @@ body.mini-app {
 
     > .mini-app-footer {
         flex-shrink: 0;
+        display: grid;
+    }
+
+    > .mini-app-footer .action {
+        background-color: $primary;
+        width: 100%;
     }
 }
 
