@@ -28,9 +28,11 @@
   </div>
 <% else %>
   <div class="message">
+    <h1>✋</h1>
     <h5>Ask questions and get<br> help in class.</h5>
   </div>
-  <div class="d-grid">
+
+  <% content_for :footer do %>
     <%= link_to "Sign in", auth_mail_login_path, class: "btn btn-primary" %>
-  </div>
+  <% end %>
 <% end %>

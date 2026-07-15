@@ -1,6 +1,12 @@
 // Bootstrap 5.3 (from the `bootstrap` gem) compiled by dart-sass — no Node.
 @import "bootstrap";
 
+// Default Trix/Action Text editor styles, imported after Bootstrap so its
+// button/border rules aren't reset by Bootstrap's own button styles.
+@import "actiontext";
+
 // The "mini app" shell: full-screen on phones, a framed card on desktop.
 @import "miniapp";
 @import "cards";
+@import "all_students";
+@import "notes";

@@ -1,0 +1,42 @@
+// Staff "All students" page: a grid of every student, with live presence
+// highlighting and a client-side name filter (filter_controller.js).
+
+.attendance-filter {
+    margin-bottom: 1rem;
+}
+
+.attendance-grid {
+    .student-card {
+        // Match the rounded look of the question queue's list items.
+        border: none;
+        border-radius: 40px !important;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+
+        .card-body {
+            padding: 1.25rem 1.5rem;
+        }
+    }
+
+    .student-card--present {
+        background-color: #EAFBEF;
+        border-color: #8FD9A3;
+    }
+}
+
+.status-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.status-dot--present {
+    background-color: #2FAE55;
+    box-shadow: 0 0 0 3px rgba(47, 174, 85, 0.2);
+}
+
+.status-dot--away {
+    background-color: #ccc;
+}

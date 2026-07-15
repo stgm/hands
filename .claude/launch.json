@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rails",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export DATABASE_HOST=x DATABASE_NAME=x DATABASE_USER=x DATABASE_PASSWORD=x; bin/rails server -p 3000 -b 'ssl://0.0.0.0:3000?key=config/ssl/localhost.key&cert=config/ssl/localhost.crt'"],
+      "port": 3000
+    }
+  ]
+}

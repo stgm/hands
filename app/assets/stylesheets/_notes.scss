@@ -1,0 +1,111 @@
+// Student personal notes page: the add-note form is hidden behind a toggle
+// button (disclosure_controller.js) and stands out with a white background.
+
+.add-note-form {
+    background-color: #fff;
+    padding: 0;
+}
+
+// Student notes page laid out like a chat: the page body itself is the
+// scrollable message history (oldest to newest, auto-scrolled to the bottom
+// by chat_controller.js), with the add-note composer pinned to the bottom
+// of the page.
+//
+// White background for the whole chat, with no horizontal padding of its own
+// so the composer/form can run edge-to-edge — everything else (message
+// author/time/bubble) insets itself via its own padding instead.
+.hands-app.notes-page {
+    /* background-color: #fff; */
+    padding-inline: 0;
+    /* margin-inline: -1rem; */
+
+    // .mini-app-body is a flex item with flex:1 1 auto, but flex items default
+    // to min-height:auto (content-based), which stops it from shrinking below
+    // the (ever-growing) message list. min-height:0 lets it settle to the
+    // space actually available so it can scroll on its own within the page,
+    // instead of growing past the viewport.
+    min-height: 0;
+
+    /* @media (min-width: 768px) {
+        margin-inline: -2rem;
+    } */
+}
+
+.notes-chat-composer {
+    padding: 0.75rem;
+    margin-inline: -1rem;
+    border-top: 1px solid #dee2e6;
+    background-color: white;
+
+    @media (min-width: 768px) {
+        margin-inline: -2rem;
+    }
+
+    // Only one of these is ever visible at a time (disclosure_controller.js
+    // toggles `hidden`), so sharing a view-transition-name is valid and makes
+    // the browser morph the trigger button into the form, and back, instead
+    // of a hard cut.
+    [data-disclosure-target="trigger"],
+    [data-disclosure-target="content"] {
+        view-transition-name: note-composer;
+    }
+}
+
+// Each note is a plain .list-group-item (a direct child of .list-group, as
+// list-group semantics expect) containing an author label, a rounded
+// "bubble" holding the note text, and a timestamp below. The list-group-item
+// itself carries none of the bubble's visual styling — the nested
+// .note-bubble does — so it's neutralized here (elsewhere, .list-group-item
+// gets a 2rem padding and a 40px radius meant for single-element items).
+.notes-list {
+    border-top: 1px solid #dee2e6;
+    border-radius: 0;
+    padding: 0.75rem;
+
+    .list-group-item {
+        padding: 0;
+        background-color: transparent;
+        border-radius: 0 !important;
+    }
+
+    .note-author {
+        font-size: x-small;
+        padding-left: 20px;
+        margin-bottom: 0.15rem;
+    }
+
+    .note-bubble {
+        display: inline-block;
+        max-width: 85%;
+        background-color: #E9E9EB;
+        border-radius: 20px;
+        padding: 1rem;
+    }
+
+    .note-time {
+        font-size: x-small;
+        padding-left: 20px;
+        margin-top: 0.15rem;
+        text-align: right;
+    }
+}
+
+// Hide the undo/redo button group from the Trix toolbar everywhere it's used.
+trix-toolbar .trix-button-group--history-tools {
+    display: none;
+}
+
+// Trix's own CSS puts a 10px margin-bottom under the button group, leaving a
+// big gap above the editor field.
+trix-toolbar .trix-button-group {
+    margin-bottom: 6px;
+}
+
+// Square off the toolbar so it doesn't pick up border-radius from our own
+// button/card styling elsewhere in the app.
+trix-toolbar .trix-button-group,
+trix-toolbar .trix-button,
+trix-toolbar .trix-dialog,
+trix-toolbar .trix-input--dialog {
+    border-radius: 0;
+}

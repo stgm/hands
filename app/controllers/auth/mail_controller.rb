@@ -1,7 +1,7 @@
 class Auth::MailController < ApplicationController
     # Login by email using a one-time code (ported from course-site).
 
-    layout "auth"
+    # layout "auth"
 
     def self.available?
         !Auth::OpenController.available? || Settings.login_by_email

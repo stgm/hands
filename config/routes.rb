@@ -66,6 +66,7 @@ Rails.application.routes.draw do
 
         resource :availability, only: [ :edit, :update ], controller: "hands/availabilities"
         resources :notes, only: [ :index, :create ], controller: "hands/notes"
+        get "students/:id", to: "hands/notes#student", as: :student_notes
         get "attendance", to: "hands/attendance#index", as: :attendance
 
         # staff management (teachers invite/manage staff)

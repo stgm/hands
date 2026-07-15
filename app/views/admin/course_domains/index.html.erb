@@ -4,10 +4,6 @@
 <% content_for :app_title, "Course domains" %>
 <% content_for :app_subtitle, "Site administration" %>
 
-<div class="mb-3 text-end">
-  <%= link_to "New course domain", new_admin_course_domain_path, class: "btn btn-primary btn-sm" %>
-</div>
-
 <% if @course_domains.any? %>
   <table class="table align-middle">
     <thead>
@@ -27,4 +23,8 @@
   </table>
 <% else %>
   <p class="text-body-secondary">No course domains yet.</p>
+<% end %>
+
+<% content_for :footer do %>
+  <%= link_to "New course domain", new_admin_course_domain_path, class: "btn btn-primary btn-sm w-100" %>
 <% end %>

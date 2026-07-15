@@ -1,42 +1,24 @@
-<% content_for :title, "Notes — #{current_course_domain.name}" %>
-<% content_for :wide, true %>
+<% content_for :title, "Recent notes — #{current_course_domain.name}" %>
+<% content_for :wide, false %>
 <% content_for :app_icon, "📝" %>
-<% content_for :app_title, "Notes" %>
-<% content_for :app_subtitle, current_course_domain.name %>
+<% content_for :app_title, "Recent notes" %>
+<% content_for :app_subtitle, "#{current_course_domain.name}" %>
 
-<div class="row g-4">
-  <div class="col-12 col-lg-5">
-    <h2 class="h6">Add a note</h2>
-    <%= form_with url: domain_notes_path(current_course_domain.slug), method: :post do |f| %>
-      <div class="mb-2">
-        <%= f.label :membership_id, "Student", class: "form-label" %>
-        <%= f.collection_select :membership_id, @members, :id, :display_name, {}, class: "form-select form-select-sm" %>
-      </div>
-      <div class="mb-2">
-        <%= f.label :text, "Note", class: "form-label" %>
-        <%= f.rich_text_area :text %>
-      </div>
-      <%= f.submit "Save note", class: "btn btn-primary btn-sm" %>
+<% if @notes.any? %>
+  <ul class="list-group">
+    <% @notes.each do |note| %>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <%= link_to note.membership.display_name,
+                domain_student_notes_path(current_course_domain.slug, note.membership_id),
+                class: "fw-bold text-decoration-none" %>
+          <span class="small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></span>
+        </div>
+        <div><%= note.text %></div>
+        <% if note.author %><div class="small text-body-secondary">— <%= note.author.display_name %></div><% end %>
+      </li>
     <% end %>
-  </div>
-
-  <div class="col-12 col-lg-7">
-    <h2 class="h6">Recent notes</h2>
-    <% if @notes.any? %>
-      <ul class="list-group">
-        <% @notes.reverse_each do |note| %>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between">
-              <strong><%= note.membership.display_name %></strong>
-              <span class="small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></span>
-            </div>
-            <div><%= note.text %></div>
-            <% if note.author %><div class="small text-body-secondary">— <%= note.author.display_name %></div><% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="text-body-secondary">No notes yet.</p>
-    <% end %>
-  </div>
-</div>
+  </ul>
+<% else %>
+  <p class="text-body-secondary">No notes yet.</p>
+<% end %>

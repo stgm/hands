@@ -10,8 +10,8 @@
 
   <% if acting_staff? %>
     <%= link_to "Open the queue", domain_queue_hands_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
-    <%= link_to "Attendance", domain_attendance_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
-    <%= link_to "Notes", domain_notes_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <%= link_to "All students", domain_attendance_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
+    <%= link_to "Recent notes", domain_notes_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
     <% if acting_senior? %>
       <%= link_to "Manage staff", domain_staff_path(@course_domain.slug), class: "list-group-item list-group-item-action" %>
     <% end %>

@@ -5,8 +5,9 @@ class Hands::AttendanceController < ApplicationController
 
     def index
         Presence.reap_stale!
-        @present = current_course_domain.presences.active
-            .includes(membership: :user)
-            .sort_by { |p| [ p.location.to_s, p.membership.display_name ] }
+        @students = current_course_domain.memberships.students.includes(:user)
+            .sort_by(&:display_name)
+        @presences_by_membership = current_course_domain.presences.active
+            .includes(:membership).group_by(&:membership_id)
     end
 end

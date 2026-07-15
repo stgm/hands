@@ -23,7 +23,7 @@
   <%# The "mini app" shell: a full-screen app on phones, a framed card on desktop.
       No navbar — navigation lives in the top-level menu at the root path. %>
   <body class="mini-app">
-    <div class="mini-app-container <%= "wide" if content_for?(:wide) %>">
+    <div class="mini-app-container <%= "wide" if content_for?(:wide) %> <%= yield :container_class %>" <%= yield :container_data %>>
       <div class="mini-app-header">
         <%# With no navbar, the header icon is the way back to the top-level menu. %>
         <%= link_to (content_for?(:app_icon) ? yield(:app_icon) : "✋"), root_path,
@@ -32,10 +32,21 @@
         <h3 class="text-body-secondary"><%= yield :app_subtitle %></h3>
       </div>
 
-      <div class="mini-app-body hands-app">
-        <%= render "layouts/flash" %>
+      <% if flash.any? %>
+        <div class="mini-app-flash">
+          <%= render "layouts/flash" %>
+        </div>
+      <% end %>
+
+      <div class="mini-app-body hands-app <%= yield :body_class %>" <%= yield :body_data %>>
         <%= yield %>
       </div>
+
+      <% if content_for?(:footer) %>
+        <div class="mini-app-footer">
+          <%= yield :footer %>
+        </div>
+      <% end %>
     </div>
   </body>
 </html>

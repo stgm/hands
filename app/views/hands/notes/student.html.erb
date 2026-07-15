@@ -1,0 +1,44 @@
+<% content_for :title, "#{@membership.display_name} — Notes — #{current_course_domain.name}" %>
+<% content_for :wide, false %>
+<% content_for :body_class, "notes-page" %>
+<% content_for :app_icon, "📝" %>
+<% content_for :app_title, @membership.display_name %>
+<% content_for :app_subtitle, "#{current_course_domain.name}" %>
+
+<% content_for :body_data do %>data-controller="chat" data-action="disclosure:toggle@window->chat#scrollToBottom" data-chat-target="messages"<% end %>
+
+<% if @notes.any? %>
+  <ul class="list-group notes-list">
+    <% @notes.each do |note| %>
+      <li class="list-group-item note-item">
+        <% if note.author %>
+          <div class="note-author small text-body-secondary"><%= note.author.display_name %></div>
+        <% end %>
+        <div class="note-bubble"><%= note.text %></div>
+        <div class="note-time small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-body-secondary">No notes yet.</p>
+<% end %>
+
+<% content_for :footer do %>
+  <div data-controller="disclosure" class="notes-chat-composer">
+    <div data-disclosure-target="content" hidden class="add-note-form">
+      <%= form_with url: domain_notes_path(current_course_domain.slug), method: :post do |f| %>
+        <%= hidden_field_tag :membership_id, @membership.id %>
+        <div class="mb-2">
+          <%= f.rich_text_area :text, required: true %>
+        </div>
+        <div class="text-end">
+          <%= f.submit "Save note", class: "btn btn-primary btn-sm" %>
+        </div>
+      <% end %>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-sm w-100" data-disclosure-target="trigger" data-action="disclosure#toggle">
+      +
+    </button>
+  </div>
+<% end %>

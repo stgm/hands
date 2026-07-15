@@ -3,21 +3,18 @@
 // Ported from course-site's includes/miniapp.scss.
 
 body.mini-app {
-    background-color: #F4F9FF;
-    min-height: 100dvh;
+    background: linear-gradient(180deg, #E3F1FF, #FFFBE2) fixed;
+    // Must be a definite height, not min-height: the "main" grid row is 1fr
+    // and .mini-app-container sizes itself with percentage heights against
+    // it, both of which resolve to auto (i.e. grow with content, breaking
+    // internal scrolling) unless the grid container has an actual height.
+    height: 100dvh;
 
     display: grid;
-    grid-template-areas: "navbar" "main";
-    grid-template-rows: max-content 1fr;
-    grid-template-columns: 1fr;
-}
-
-body.mini-app:not(:has(#navbar)) {
     grid-template-areas: "main";
     grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
 }
-
-#navbar { grid-area: navbar; }
 
 // base container that will be framed on desktop, contains header + body
 .mini-app-container {
@@ -28,9 +25,13 @@ body.mini-app:not(:has(#navbar)) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    row-gap: 1rem;
+    /* row-gap: 1rem; */
 
     grid-area: main;
+
+    > .mini-app-footer {
+        flex-shrink: 0;
+    }
 }
 
 .mini-app-header {
@@ -46,17 +47,30 @@ body.mini-app:not(:has(#navbar)) {
     > * { margin: 0; }
 }
 
+.mini-app-footer {
+    /* display: flex; */
+}
+
+.mini-app-flash {
+    flex-shrink: 0;
+}
+
 .mini-app-body {
     flex: 1 1 auto;
     overflow-y: auto;
+    // overflow-y:auto implicitly makes overflow-x behave as auto too, so any
+    // horizontal bleed (see below) would show a scrollbar. Explicit `clip`
+    // is a safety net: it never scrolls, so the padding trick below only has
+    // to be *generous*, not exact, to keep focus rings from looking cut off.
+    overflow-x: clip;
 
-    // overflow-y:auto also clips the x axis, which would cut off focus rings
-    // (Bootstrap draws them as a 0.25rem box-shadow *outside* the input box).
-    // Give them room, then pull the content back into alignment.
-    padding-inline: 0.35rem;
-    margin-inline: -0.35rem;
+    // Bootstrap draws focus rings as a 0.25rem box-shadow *outside* the input
+    // box, and grid rows bleed past their container via negative margins
+    // (half their gutter, e.g. 0.75rem each side for `.g-4`). Give both room,
+    // then pull the content back into alignment.
+    /* margin-inline: -0.75rem; */
 
-    .btn, button {
+    .btn:not(trix-toolbar .btn), button:not(trix-toolbar button) {
         border-radius: 50px !important;
     }
 
@@ -70,8 +84,30 @@ body.mini-app:not(:has(#navbar)) {
         // on mobile the app is just a full-screen div
         height: 100%;
         width: 100%;
-        padding: 1rem 1rem 1.5rem 1rem;
+
+        // Without this, overflowing content (e.g. a long notes list) just
+        // grows the container past the viewport and the whole page scrolls,
+        // instead of the inner .notes-chat-messages scrolling on its own —
+        // the desktop card rule below already clips the same way.
+        overflow: hidden;
+
+        > * {
+            padding-inline: 1rem;
+        }
+
+        > .mini-app-header {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .mini-app-footer {
+            padding: 1rem;
+        }
     }
+
+    /* .mini-app-body {
+        padding-inline: calc(1rem + 0.75rem);
+    } */
 }
 
 @media (min-width: 768px) {
@@ -83,14 +119,27 @@ body.mini-app:not(:has(#navbar)) {
 
         border: 1px solid #eff;
         border-radius: 40px;
+        corner-shape: squircle;
 
         background: linear-gradient(180deg, #E3F1FF, #FFFBE2) fixed !important;
         box-shadow: 0px 10px 40px 9px rgba(0, 0, 0, 0.1);
 
         overflow: hidden;
 
-        padding: 2rem;
-        row-gap: 2rem;
+        /* row-gap: 2rem; */
+
+        > * {
+            padding-inline: 2rem;
+        }
+
+        .mini-app-header {
+            padding-top: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .mini-app-footer {
+            padding: 1rem;
+        }
     }
 
     // Data-heavy staff/admin pages (tables, rosters) need more room than the
