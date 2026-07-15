@@ -24,7 +24,7 @@ class Hands::QueueController < ApplicationController
     # PUT /<slug>/hands/:id/claim — manual claim (seniors/admins/assistants)
     def claim
         @hand.claim!(staff_membership!)
-        redirect_to domain_queue_hands_path(current_course_domain.slug)
+        redirect_to domain_queue_hand_path(current_course_domain.slug, @hand)
     end
 
     # PUT /<slug>/hands/:id/done — close a hand with an outcome

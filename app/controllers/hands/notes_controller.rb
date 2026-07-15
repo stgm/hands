@@ -6,6 +6,7 @@ class Hands::NotesController < ApplicationController
     def index
         @notes = current_course_domain.notes.written.order(created_at: :desc)
             .includes(:membership, :author).limit(50)
+            .to_a.reverse
     end
 
     def student

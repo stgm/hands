@@ -5,13 +5,18 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["messages"]
 
+  // Scrolls synchronously, before the initial paint: layout is already
+  // settled at connect time, so waiting a frame (like scrollToBottom below)
+  // would paint one frame at scrollTop 0 first, flashing the top of the list
+  // before jumping to the bottom.
   connect() {
-    this.scrollToBottom()
+    this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
   }
 
   // Re-run after the composer opens/closes (see disclosure_controller.js):
   // it resizes the message list, which otherwise leaves the scroll position
-  // wherever it happened to land.
+  // wherever it happened to land. Needs the rAF here since the resize hasn't
+  // finished laying out yet when the toggle event fires.
   scrollToBottom() {
     requestAnimationFrame(() => {
       this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight

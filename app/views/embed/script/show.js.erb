@@ -19,6 +19,7 @@
 
     var handsBase = String(cfg.handsUrl).replace(/\/+$/, "");
     var waitingGifObjectUrl = null;
+    var waitingGifPromise = null;
 
     // Render inside a Shadow DOM so the widget's own stylesheet (served by the
     // hands app) fully controls its look, isolated from the host page's CSS.
@@ -64,6 +65,14 @@
     // Random waiting GIF, remembered across polls (as course-site did). The
     // gif is stored in the repo XOR-obfuscated so it isn't visible as-is on
     // GitHub; decode it here into a Blob and show that instead.
+    //
+    // render() can fire twice in quick succession (a cable push racing a form
+    // submit's response), each replacing content's innerHTML and thus the
+    // #waiting-gif node. Decoding is shared across calls via waitingGifPromise,
+    // and the resolved URL is applied to whichever #waiting-gif element is
+    // current *when it resolves* rather than one captured up front, so a
+    // stale/detached element from an earlier render() never ends up as the one
+    // holding the blob src.
     function setupWaitingGif() {
         var img = content.querySelector("#waiting-gif");
         if (!img) return;
@@ -71,8 +80,23 @@
 
         if (waitingGifObjectUrl) { img.src = waitingGifObjectUrl; return; }
 
+        if (!waitingGifPromise) {
+            waitingGifPromise = decodeWaitingGif(img).catch(function (e) { waitingGifPromise = null; throw e; });
+        }
+
+        waitingGifPromise.then(function (url) {
+            waitingGifObjectUrl = url;
+            var currentImg = content.querySelector("#waiting-gif");
+            if (currentImg) currentImg.src = url;
+        }).catch(function () {
+            var currentImg = content.querySelector("#waiting-gif");
+            if (currentImg) currentImg.style.display = "none";
+        });
+    }
+
+    function decodeWaitingGif(img) {
         var urls = JSON.parse(img.dataset.waitingGifUrls || "[]");
-        if (urls.length === 0) return;
+        if (urls.length === 0) return Promise.reject(new Error("no waiting gif urls"));
 
         var chosen = localStorage["hands-waiting-gif"];
         if (!chosen || urls.indexOf(chosen) === -1) {
@@ -81,16 +105,13 @@
         }
 
         var key = img.dataset.waitingGifKey.match(/../g).map(function (h) { return parseInt(h, 16); });
-        fetch(chosen).then(function (res) {
+        return fetch(chosen).then(function (res) {
             if (!res.ok) throw new Error("fetch failed");
             return res.arrayBuffer();
         }).then(function (buf) {
             var bytes = new Uint8Array(buf);
             for (var i = 0; i < bytes.length; i++) bytes[i] ^= key[i % key.length];
-            waitingGifObjectUrl = URL.createObjectURL(new Blob([bytes], { type: "image/gif" }));
-            img.src = waitingGifObjectUrl;
-        }).catch(function () {
-            img.style.display = "none";
+            return URL.createObjectURL(new Blob([bytes], { type: "image/gif" }));
         });
     }
 

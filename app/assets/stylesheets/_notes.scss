@@ -56,8 +56,17 @@
 .notes-list {
     /* border-top: 1px solid #dee2e6; */
     border-radius: 0;
-    padding: 0.75rem;
+    padding: 1rem;
     min-height: 100%;
+
+    // .mini-app-body is the scrolling element (overflow-y: auto), and its own
+    // padding-bottom (see .mini-app-body:last-child in _miniapp.scss) is
+    // trailing padding on a scroll container — browsers clip that once
+    // content overflows, so it never shows once the list actually scrolls.
+    // .notes-list is a plain (non-scrolling) child, so its own padding always
+    // renders; duplicating the gap here is what actually keeps space below
+    // the last note.
+    padding-bottom: 1.75rem;
 
     // No <li>s to render the message via Ruby, so show it via CSS instead:
     // an empty list has nothing else to lay out, so centering the pseudo-
@@ -104,6 +113,26 @@
         padding-right: 20px;
         margin-top: 0.15rem;
         text-align: right;
+    }
+
+    // Recent-notes page only: intersperses a student-name heading before each
+    // run of consecutive same-student notes (list items span the full width,
+    // unlike the fit-content note bubbles).
+    .note-group-heading {
+        width: 100%;
+        padding: 0.5rem 0.25rem 0.25rem;
+        border: 0;
+        background: none;
+
+        &:not(:first-child) {
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .notes-list {
+        padding: 2rem;
     }
 }
 

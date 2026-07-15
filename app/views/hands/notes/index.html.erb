@@ -4,20 +4,24 @@
 <% content_for :app_title, "Recent notes" %>
 <% content_for :app_subtitle, "#{current_course_domain.name}" %>
 
-<div class="mini-app-body hands-app">
+<div class="mini-app-body hands-app notes-page recent-notes-page" data-controller="chat" data-chat-target="messages">
   <% if @notes.any? %>
-    <ul class="list-group">
-      <% @notes.each do |note| %>
-        <li class="list-group-item">
-          <div class="d-flex justify-content-between">
-            <%= link_to note.membership.display_name,
-                  domain_student_notes_path(current_course_domain.slug, note.membership_id),
-                  class: "fw-bold text-decoration-none" %>
-            <span class="small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></span>
-          </div>
-          <div><%= note.text %></div>
-          <% if note.author %><div class="small text-body-secondary">— <%= note.author.display_name %></div><% end %>
+    <ul class="list-group notes-list">
+      <% @notes.chunk_while { |a, b| a.membership_id == b.membership_id }.each do |group| %>
+        <li class="note-group-heading">
+          <%= link_to group.first.membership.display_name,
+                domain_student_notes_path(current_course_domain.slug, group.first.membership_id),
+                class: "fw-bold text-decoration-none" %>
         </li>
+        <% group.each do |note| %>
+          <li class="list-group-item note-item">
+            <% if note.author %>
+              <div class="note-author small text-body-secondary"><%= note.author.display_name %></div>
+            <% end %>
+            <div class="note-bubble"><%= note.text %></div>
+            <div class="note-time small text-body-secondary"><%= note.created_at.strftime("%-d %b %H:%M") %></div>
+          </li>
+        <% end %>
       <% end %>
     </ul>
   <% else %>

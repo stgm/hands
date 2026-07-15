@@ -12,11 +12,6 @@
         height: 100%;
     }
 
-    // If first card is an image it assumes the image's natural height
-    .cards:has(> img:first-child) {
-        grid-template-rows: minmax(0, auto) 1fr;
-    }
-
     .cards:has(> :only-child) {
         grid-template-rows: 1fr;
     }
@@ -89,7 +84,7 @@
         rotate: -0.5deg;
     }
 
-    .cards > img:first-child { width: 100%; }
+    .cards > img:first-child { width: 100%; height: 100%; object-fit: cover; }
 
     .cards .message {
         flex: 1 1 auto;
@@ -119,8 +114,9 @@
 
         .cards > img:first-child {
             width: 95%;
+            height: 100%;
             margin: 0 auto;
-            min-height: 70%;
+            object-fit: cover;
             border-radius: 40px;
         }
     }
