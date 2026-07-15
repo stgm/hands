@@ -21,6 +21,7 @@ export default class extends Controller {
     disconnect() {
         clearInterval(this.heartbeat)
         if (this.subscription) this.subscription.unsubscribe()
+        if (this.waitingGifObjectUrl) { URL.revokeObjectURL(this.waitingGifObjectUrl); this.waitingGifObjectUrl = null }
     }
 
     swap(html) {
@@ -37,17 +38,36 @@ export default class extends Controller {
         })
     }
 
-    // Random waiting GIF, remembered across updates (as course-site did).
-    setupWaitingGif() {
+    // Random waiting GIF, remembered across updates (as course-site did). The
+    // gif is stored in the repo XOR-obfuscated so it isn't visible as-is on
+    // GitHub; decode it here into a Blob and show that instead.
+    async setupWaitingGif() {
         const img = this.element.querySelector("#waiting-gif")
         if (!img) return
-        let url = localStorage["hands-waiting-gif"]
-        if (!url) {
-            url = (img.getAttribute("data-waiting-gif-base") || "") + "wait" + Math.floor(Math.random() * 10) + ".gif"
-            localStorage["hands-waiting-gif"] = url
-        }
         img.onerror = () => { img.style.display = "none" }
-        img.src = url
+
+        if (this.waitingGifObjectUrl) { img.src = this.waitingGifObjectUrl; return }
+
+        const urls = JSON.parse(img.dataset.waitingGifUrls || "[]")
+        if (urls.length === 0) return
+
+        let chosen = localStorage["hands-waiting-gif"]
+        if (!chosen || !urls.includes(chosen)) {
+            chosen = urls[Math.floor(Math.random() * urls.length)]
+            localStorage["hands-waiting-gif"] = chosen
+        }
+
+        try {
+            const key = img.dataset.waitingGifKey.match(/../g).map((h) => parseInt(h, 16))
+            const res = await fetch(chosen)
+            if (!res.ok) throw new Error("fetch failed")
+            const bytes = new Uint8Array(await res.arrayBuffer())
+            for (let i = 0; i < bytes.length; i++) bytes[i] ^= key[i % key.length]
+            this.waitingGifObjectUrl = URL.createObjectURL(new Blob([bytes], { type: "image/gif" }))
+            img.src = this.waitingGifObjectUrl
+        } catch (e) {
+            img.style.display = "none"
+        }
     }
 
     async submit(event, form) {

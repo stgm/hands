@@ -48,6 +48,42 @@
         justify-content: center;
     }
 
+    // Check-in ("location") view — a yellow rounded box with a big dotted field.
+    #location-form {
+        justify-content: space-between;
+        background-color: rgba(255, 206, 0, 0.6);
+        border-radius: 30px;
+        padding: 1.5rem;
+
+        #location-text-field {
+            border-bottom: 2px dotted;
+            font-size: 2rem;
+            border-radius: unset;
+            width: 100%;
+            margin: 0 auto;
+        }
+    }
+
+    #location-form, #assistance-form {
+        // have the question box take up any remaining space
+        #assistance-form-question {
+            flex: 1 1 auto !important;
+        }
+
+        label {
+            margin-bottom: 0.35rem;
+            font-size: 90%;
+            margin-left: 0.15rem;
+        }
+
+        textarea, input {
+            width: 100%;
+            border: none;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+    }
+
     .cards > img {
         border-radius: 40px;
         rotate: -0.5deg;
@@ -63,11 +99,11 @@
     }
 
     @media (max-width: 767px) {
-        .cards {
+        /* .cards {
             & > :first-child { rotate: -1deg; }
             & > :last-child { rotate: 0.75deg; }
             & > :only-child { rotate: none; }
-        }
+        } */
 
         .cards > div, .cards > form {
             border-radius: 40px;
@@ -91,6 +127,8 @@
 
     @media (min-width: 768px) {
         .cards { row-gap: 2rem; }
+
+        #location-form { padding: 1.5rem; margin: -1.5rem; }
     }
 }
 
@@ -111,7 +149,10 @@
     .list-group-item {
         padding: 2rem;
         border: 0 !important;
-        margin-bottom: 0.5rem;
+
+        &:not(:last-child) {
+            margin-bottom: 0.5rem;
+        }
     }
 
     &.home-page .home-hero {

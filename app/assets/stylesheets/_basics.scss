@@ -1,0 +1,10 @@
+// Real, clickable buttons get a pill shape everywhere in the app.
+.btn:not(trix-toolbar .btn), button:not(trix-toolbar button) {
+    border-radius: 3rem !important;
+    corner-shape: squircle;
+    min-height: 2.5rem;
+    padding-inline: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

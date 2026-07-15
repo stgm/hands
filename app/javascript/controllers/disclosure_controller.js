@@ -6,6 +6,41 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["trigger", "content"]
 
+  connect() {
+    this.onKeydown = this.onKeydown.bind(this)
+    document.addEventListener("keydown", this.onKeydown)
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.onKeydown)
+  }
+
+  onKeydown(event) {
+    if (event.metaKey || event.ctrlKey || event.altKey) return
+
+    // "+" opens the composer, mirroring a click on the trigger button.
+    if (event.key === "+" && this.hasTriggerTarget && !this.triggerTarget.hidden && !this.isEditableTarget(event.target)) {
+      event.preventDefault()
+      this.toggle()
+      return
+    }
+
+    // Esc dismisses the open composer, but only if there's no draft to lose.
+    if (event.key === "Escape" && !this.contentTarget.hidden && this.isEmpty()) {
+      event.preventDefault()
+      this.toggle()
+    }
+  }
+
+  isEditableTarget(target) {
+    return target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
+  }
+
+  isEmpty() {
+    const editor = this.contentTarget.querySelector("trix-editor")
+    return !editor || editor.innerText.trim() === ""
+  }
+
   toggle() {
     // document.startViewTransition() runs its callback asynchronously (after
     // capturing the "old" snapshot), so anything that depends on the new

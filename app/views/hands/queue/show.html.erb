@@ -9,23 +9,25 @@
       <%= render "hands/queue/hand", hand: @hand, course_domain: current_course_domain %>
     </div>
 
+    <%# button_to wraps each button in a form; the form stretches to fill the
+        grid/flex track but the button itself needs w-100 to fill it in turn. %>
     <% if @hand.assist.nil? %>
-      <div class="d-grid gap-2">
+      <div class="d-grid gap-2 d-md-flex">
         <%= button_to "Start helping", claim_domain_queue_hand_path(current_course_domain.slug, @hand),
-              method: :put, class: "btn btn-primary" %>
+              method: :put, class: "btn btn-primary w-100 me-md-2" %>
         <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
-              method: :put, class: "btn btn-secondary",
+              method: :put, class: "btn btn-secondary w-100",
               form: { data: { turbo_confirm: "Sure to delete this request?" } } %>
       </div>
     <% else %>
-      <div class="d-grid gap-2">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <%= button_to "Mark as done", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: true),
-              method: :put, class: "btn btn-primary" %>
+              method: :put, class: "btn btn-primary w-100 me-md-2" %>
         <%= button_to "Put back in list", helpline_domain_queue_hand_path(current_course_domain.slug, @hand),
-              method: :put, class: "btn btn-secondary",
+              method: :put, class: "btn btn-secondary w-100 me-md-2",
               form: { data: { turbo_confirm: "Are you sure someone is available for extra help?" } } %>
         <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
-              method: :put, class: "btn btn-secondary",
+              method: :put, class: "btn btn-secondary w-100",
               form: { data: { turbo_confirm: "Sure to delete this request?" } } %>
       </div>
     <% end %>

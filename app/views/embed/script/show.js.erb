@@ -18,6 +18,7 @@
     window.__handsEmbedStarted = true;
 
     var handsBase = String(cfg.handsUrl).replace(/\/+$/, "");
+    var waitingGifObjectUrl = null;
 
     // Render inside a Shadow DOM so the widget's own stylesheet (served by the
     // hands app) fully controls its look, isolated from the host page's CSS.
@@ -60,17 +61,37 @@
         });
     }
 
-    // Random waiting GIF, remembered across polls (as course-site did).
+    // Random waiting GIF, remembered across polls (as course-site did). The
+    // gif is stored in the repo XOR-obfuscated so it isn't visible as-is on
+    // GitHub; decode it here into a Blob and show that instead.
     function setupWaitingGif() {
         var img = content.querySelector("#waiting-gif");
         if (!img) return;
-        var url = localStorage["hands-waiting-gif"];
-        if (!url) {
-            url = (img.getAttribute("data-waiting-gif-base") || "") + "wait" + Math.floor(Math.random() * 10) + ".gif";
-            localStorage["hands-waiting-gif"] = url;
-        }
         img.onerror = function () { img.style.display = "none"; };
-        img.src = url;
+
+        if (waitingGifObjectUrl) { img.src = waitingGifObjectUrl; return; }
+
+        var urls = JSON.parse(img.dataset.waitingGifUrls || "[]");
+        if (urls.length === 0) return;
+
+        var chosen = localStorage["hands-waiting-gif"];
+        if (!chosen || urls.indexOf(chosen) === -1) {
+            chosen = urls[Math.floor(Math.random() * urls.length)];
+            localStorage["hands-waiting-gif"] = chosen;
+        }
+
+        var key = img.dataset.waitingGifKey.match(/../g).map(function (h) { return parseInt(h, 16); });
+        fetch(chosen).then(function (res) {
+            if (!res.ok) throw new Error("fetch failed");
+            return res.arrayBuffer();
+        }).then(function (buf) {
+            var bytes = new Uint8Array(buf);
+            for (var i = 0; i < bytes.length; i++) bytes[i] ^= key[i % key.length];
+            waitingGifObjectUrl = URL.createObjectURL(new Blob([bytes], { type: "image/gif" }));
+            img.src = waitingGifObjectUrl;
+        }).catch(function () {
+            img.style.display = "none";
+        });
     }
 
     function submitForm(event, form) {

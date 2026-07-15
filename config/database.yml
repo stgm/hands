@@ -22,10 +22,9 @@ production:
     adapter: postgresql
     encoding: unicode
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    host: <%= ENV.fetch("DATABASE_HOST") %>
-    database: <%= ENV.fetch("DATABASE_NAME") %>
-    username: <%= ENV.fetch("DATABASE_USER") %>
-    password: <%= ENV.fetch("DATABASE_PASSWORD") %>
+    database: <%= ENV['DATABASE_NAME'].presence || "storage/production.sqlite3" %>
+    username: <%= ENV['DATABASE_USER'].presence || "default_user" %>
+    password: <%= ENV['DATABASE_PASSWORD'].presence || "default_password" %>
     sslmode: require
   cache:
     <<: *primary_production

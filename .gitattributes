@@ -7,3 +7,6 @@ db/schema.rb linguist-generated
 vendor/* linguist-vendored
 config/credentials/*.yml.enc diff=rails_credentials
 config/credentials.yml.enc diff=rails_credentials
+
+# Obfuscated waiting-gif assets: treat as opaque binary, never diff/render.
+app/assets/images/*.bin -text -diff

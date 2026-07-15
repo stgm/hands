@@ -13,10 +13,30 @@ export default class extends Controller {
     // back/forward visits, so reset here to land back on the full roster.
     this.inputTarget.value = ""
     this.apply()
+
+    this.onTypeToSearch = this.typeToSearch.bind(this)
+    document.addEventListener("keydown", this.onTypeToSearch)
   }
 
   disconnect() {
     this.observer?.disconnect()
+    document.removeEventListener("keydown", this.onTypeToSearch)
+  }
+
+  // Typing anywhere on the page starts a search: focus the filter and
+  // feed it the keystroke, since focusing mid-keydown doesn't replay it.
+  typeToSearch(event) {
+    if (this.inputTarget === document.activeElement) return
+    if (event.metaKey || event.ctrlKey || event.altKey) return
+    if (event.key.length !== 1 || !/[a-z0-9]/i.test(event.key)) return
+
+    const target = event.target
+    if (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return
+
+    event.preventDefault()
+    this.inputTarget.focus()
+    this.inputTarget.value += event.key
+    this.apply()
   }
 
   clear() {

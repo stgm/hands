@@ -1,27 +1,25 @@
 <% content_for :title, "Course domains" %>
-<% content_for :wide, true %>
+<% content_for :wide, false %>
 <% content_for :app_icon, "🏫" %>
 <% content_for :app_title, "Course domains" %>
 <% content_for :app_subtitle, "Site administration" %>
 
 <div class="mini-app-body hands-app">
   <% if @course_domains.any? %>
-    <table class="table align-middle">
-      <thead>
-        <tr><th>Name</th><th>Slug</th><th>Enrollment</th><th>Members</th><th></th></tr>
-      </thead>
-      <tbody>
-        <% @course_domains.each do |domain| %>
-          <tr>
-            <td><%= link_to domain.name, domain_root_path(domain.slug) %></td>
-            <td><code><%= domain.slug %></code></td>
-            <td><%= domain.enrollment_open? ? "Open" : "Closed" %></td>
-            <td><%= domain.memberships.count %></td>
-            <td class="text-end"><%= link_to "Edit", edit_admin_course_domain_path(domain), class: "btn btn-sm btn-outline-secondary" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="list-group">
+      <% @course_domains.each do |domain| %>
+        <div class="list-group-item list-group-item-action d-flex align-items-stretch p-0">
+          <%= link_to edit_admin_course_domain_path(domain), class: "flex-grow-1 p-3 text-decoration-none text-reset" do %>
+            <div class="fw-bold"><%= domain.name %></div>
+            <div class="small text-body-secondary">
+              <code><%= domain.slug %></code> · <%= domain.enrollment_open? ? "Open" : "Closed" %> · <%= pluralize(domain.memberships.count, "member") %>
+            </div>
+          <% end %>
+          <%= link_to "Open", domain_root_path(domain.slug),
+                class: "d-flex align-items-center px-3 border-start text-decoration-none flex-shrink-0" %>
+        </div>
+      <% end %>
+    </div>
   <% else %>
     <p class="text-body-secondary">No course domains yet.</p>
   <% end %>

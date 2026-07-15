@@ -8,5 +8,13 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
             headers: :any,
             methods: [ :get, :post, :patch, :put, :delete, :options ],
             credentials: false
+
+        # The embed widget fetches (not just <img src>s) the obfuscated waiting-gif
+        # assets to decode them client-side, which is subject to CORS unlike a
+        # plain <img> load.
+        resource "/assets/wait*",
+            headers: :any,
+            methods: [ :get, :options ],
+            credentials: false
     end
 end

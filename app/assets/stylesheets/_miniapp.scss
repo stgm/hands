@@ -66,10 +66,6 @@ body.mini-app {
     // then pull the content back into alignment.
     /* margin-inline: -0.75rem; */
 
-    .btn:not(trix-toolbar .btn), button:not(trix-toolbar button) {
-        border-radius: 50px !important;
-    }
-
     a.list-group-item, .list-group-item {
         border-radius: 40px !important;
     }
@@ -93,6 +89,10 @@ body.mini-app {
 
         > .mini-app-header {
             padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .mini-app-body:last-child {
             padding-bottom: 1rem;
         }
 
@@ -130,6 +130,10 @@ body.mini-app {
 
         .mini-app-header {
             padding-top: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .mini-app-body:last-child {
             padding-bottom: 1rem;
         }
 
