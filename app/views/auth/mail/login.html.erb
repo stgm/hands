@@ -1,18 +1,20 @@
-<h2 class="h5 mb-3">Sign in by email</h2>
-<p class="text-body-secondary">We'll email you a one-time code.</p>
+<div class="mini-app-body hands-app">
+  <h2 class="h5 mb-3">Sign in by email</h2>
+  <p class="text-body-secondary">We'll email you a one-time code.</p>
 
-<%= form_with url: auth_mail_create_path, method: :post, id: "login_form" do |f| %>
-  <div class="mb-3">
-    <%= f.label :email, "Email address", class: "form-label" %>
-    <%= f.email_field :email, required: true, autofocus: true, class: "form-control", autocomplete: "email" %>
-  </div>
-<% end %>
+  <%= form_with url: auth_mail_create_path, method: :post, id: "login_form" do |f| %>
+    <div class="mb-3">
+      <%= f.label :email, "Email address", class: "form-label" %>
+      <%= f.email_field :email, required: true, autofocus: true, class: "form-control", autocomplete: "email" %>
+    </div>
+  <% end %>
 
-<% if Auth::OpenController.available? %>
-  <hr class="my-4">
-  <%= link_to "Sign in with institutional account", auth_open_login_path, class: "btn btn-outline-secondary w-100" %>
-<% end %>
+  <% if Auth::OpenController.available? %>
+    <hr class="my-4">
+    <%= link_to "Sign in with institutional account", auth_open_login_path, class: "btn btn-outline-secondary w-100" %>
+  <% end %>
+</div>
 
-<% content_for :footer do %>
-   <%= submit_tag "Send code", class: "btn btn-primary", form: "login_form" %>
-<% end %>
+<div class="mini-app-footer">
+  <%= submit_tag "Send code", class: "btn btn-primary w-100", form: "login_form" %>
+</div>

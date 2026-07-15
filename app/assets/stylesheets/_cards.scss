@@ -114,6 +114,23 @@
         margin-bottom: 0.5rem;
     }
 
+    &.home-page .home-hero {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 1rem;
+
+        h5 { margin: 0; }
+    }
+
+    &.home-page .home-hero-emoji {
+        font-size: 10rem;
+        line-height: 1;
+    }
+
     .hands-show {
         height: 100%;
         display: flex;

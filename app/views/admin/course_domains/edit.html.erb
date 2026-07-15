@@ -3,28 +3,30 @@
 <% content_for :app_icon, "🏫" %>
 <% content_for :app_title, "Edit domain" %>
 <% content_for :app_subtitle, @course_domain.name %>
-<%= render "form", form_url: admin_course_domain_path(@course_domain) %>
+<div class="mini-app-body hands-app">
+  <%= render "form", form_url: admin_course_domain_path(@course_domain) %>
 
-<hr class="my-4">
+  <hr class="my-4">
 
-<h2 class="h6">Linking a course site</h2>
-<p class="text-body-secondary small">
-  Configure a course-site with this domain's slug and link secret to embed the
-  student widget. Any course-site holding the secret can mint student tokens for
-  this domain.
-</p>
-<dl class="row small">
-  <dt class="col-sm-3">Domain slug</dt>
-  <dd class="col-sm-9"><code><%= @course_domain.slug %></code></dd>
-  <dt class="col-sm-3">Link secret</dt>
-  <dd class="col-sm-9"><code><%= @course_domain.link_secret %></code></dd>
-</dl>
-<%= button_to "Rotate link secret", rotate_secret_admin_course_domain_path(@course_domain),
-      method: :post, class: "btn btn-sm btn-outline-warning",
-      data: { turbo_confirm: "Rotating breaks every linked course-site until they are reconfigured. Continue?" } %>
+  <h2 class="h6">Linking a course site</h2>
+  <p class="text-body-secondary small">
+    Configure a course-site with this domain's slug and link secret to embed the
+    student widget. Any course-site holding the secret can mint student tokens for
+    this domain.
+  </p>
+  <dl class="row small">
+    <dt class="col-sm-3">Domain slug</dt>
+    <dd class="col-sm-9"><code><%= @course_domain.slug %></code></dd>
+    <dt class="col-sm-3">Link secret</dt>
+    <dd class="col-sm-9"><code><%= @course_domain.link_secret %></code></dd>
+  </dl>
+  <%= button_to "Rotate link secret", rotate_secret_admin_course_domain_path(@course_domain),
+        method: :post, class: "btn btn-sm btn-outline-warning",
+        data: { turbo_confirm: "Rotating breaks every linked course-site until they are reconfigured. Continue?" } %>
 
-<hr class="my-4">
+  <hr class="my-4">
 
-<%= button_to "Delete this course domain", admin_course_domain_path(@course_domain),
-      method: :delete, class: "btn btn-sm btn-outline-danger",
-      data: { turbo_confirm: "Delete #{@course_domain.name} and all its data?" } %>
+  <%= button_to "Delete this course domain", admin_course_domain_path(@course_domain),
+        method: :delete, class: "btn btn-sm btn-outline-danger",
+        data: { turbo_confirm: "Delete #{@course_domain.name} and all its data?" } %>
+</div>

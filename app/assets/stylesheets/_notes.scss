@@ -2,8 +2,11 @@
 // button (disclosure_controller.js) and stands out with a white background.
 
 .add-note-form {
-    background-color: #fff;
     padding: 0;
+}
+
+.add-note-form trix-editor {
+    background-color: #fff;
 }
 
 // Student notes page laid out like a chat: the page body itself is the
@@ -33,13 +36,6 @@
 
 .notes-chat-composer {
     padding: 0.75rem;
-    margin-inline: -1rem;
-    border-top: 1px solid #dee2e6;
-    background-color: white;
-
-    @media (min-width: 768px) {
-        margin-inline: -2rem;
-    }
 
     // Only one of these is ever visible at a time (disclosure_controller.js
     // toggles `hidden`), so sharing a view-transition-name is valid and makes
@@ -58,11 +54,33 @@
 // .note-bubble does — so it's neutralized here (elsewhere, .list-group-item
 // gets a 2rem padding and a 40px radius meant for single-element items).
 .notes-list {
-    border-top: 1px solid #dee2e6;
+    /* border-top: 1px solid #dee2e6; */
     border-radius: 0;
     padding: 0.75rem;
+    min-height: 100%;
+
+    // No <li>s to render the message via Ruby, so show it via CSS instead:
+    // an empty list has nothing else to lay out, so centering the pseudo-
+    // element fills the whole (scrollable) notes area. :not(:has(li)), not
+    // :empty, since it only cares about element children — immune to
+    // whitespace/text nodes the ERB loop leaves behind.
+    &:not(:has(.list-group-item)) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::before {
+            content: "No notes yet.";
+            color: var(--bs-secondary-color);
+        }
+    }
 
     .list-group-item {
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        min-width: 33%;
+        max-width: 100%;
         padding: 0;
         background-color: transparent;
         border-radius: 0 !important;
@@ -76,15 +94,14 @@
 
     .note-bubble {
         display: inline-block;
-        max-width: 85%;
-        background-color: #E9E9EB;
+        background-color: #fff;
         border-radius: 20px;
         padding: 1rem;
     }
 
     .note-time {
         font-size: x-small;
-        padding-left: 20px;
+        padding-right: 20px;
         margin-top: 0.15rem;
         text-align: right;
     }

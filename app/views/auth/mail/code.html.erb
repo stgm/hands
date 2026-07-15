@@ -1,12 +1,14 @@
-<h2 class="h5 mb-3">Enter your code</h2>
-<p class="text-body-secondary">We sent a 6-character code to <strong><%= session[:login_email] %></strong>.</p>
+<div class="mini-app-body hands-app">
+  <h2 class="h5 mb-3">Enter your code</h2>
+  <p class="text-body-secondary">We sent a 6-character code to <strong><%= session[:login_email] %></strong>.</p>
 
-<%= form_with url: auth_mail_validate_path, method: :post do |f| %>
-  <div class="mb-3">
-    <%= f.label :code, "Sign-in code", class: "form-label" %>
-    <%= f.text_field :code, required: true, autofocus: true, class: "form-control",
-          inputmode: "text", autocomplete: "one-time-code", maxlength: 6 %>
-  </div>
-  <%= f.submit "Sign in", class: "btn btn-primary" %>
-  <%= link_to "Start over", auth_mail_login_path, class: "btn btn-link" %>
-<% end %>
+  <%= form_with url: auth_mail_validate_path, method: :post do |f| %>
+    <div class="mb-3">
+      <%= f.label :code, "Sign-in code", class: "form-label" %>
+      <%= f.text_field :code, required: true, autofocus: true, class: "form-control",
+            inputmode: "text", autocomplete: "one-time-code", maxlength: 6 %>
+    </div>
+    <%= f.submit "Sign in", class: "btn btn-primary" %>
+    <%= link_to "Start over", auth_mail_login_path, class: "btn btn-link" %>
+  <% end %>
+</div>

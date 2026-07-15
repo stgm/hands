@@ -2,4 +2,6 @@
 <% content_for :wide, true %>
 <% content_for :app_icon, "🏫" %>
 <% content_for :app_title, "New course domain" %>
-<%= render "form", form_url: admin_course_domains_path %>
+<div class="mini-app-body hands-app">
+  <%= render "form", form_url: admin_course_domains_path %>
+</div>

@@ -47,10 +47,6 @@ body.mini-app {
     > * { margin: 0; }
 }
 
-.mini-app-footer {
-    /* display: flex; */
-}
-
 .mini-app-flash {
     flex-shrink: 0;
 }
@@ -138,7 +134,7 @@ body.mini-app {
         }
 
         .mini-app-footer {
-            padding: 1rem;
+            padding: 2rem;
         }
     }
 

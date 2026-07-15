@@ -4,6 +4,8 @@
 <% content_for :app_subtitle, current_course_domain.name %>
 
 <%= turbo_stream_from current_course_domain, :queue %>
-<div id="queue" class="h-100 d-flex flex-column">
-  <%= render "hands/queue/lists", hands: @hands, course_domain: current_course_domain %>
+<div class="mini-app-body hands-app">
+  <div id="queue" class="h-100 d-flex flex-column">
+    <%= render "hands/queue/lists", hands: @hands, course_domain: current_course_domain %>
+  </div>
 </div>

@@ -7,12 +7,15 @@
 
 <% content_for :container_data do %>data-controller="filter"<% end %>
 
-<div id="attendance" class="attendance" data-filter-target="grid">
-  <%= render "hands/attendance/grid", students: @students, presences_by_membership: @presences_by_membership, course_domain: current_course_domain %>
+<div class="mini-app-body hands-app">
+  <div id="attendance" class="attendance" data-filter-target="grid">
+    <%= render "hands/attendance/grid", students: @students, presences_by_membership: @presences_by_membership, course_domain: current_course_domain %>
+  </div>
 </div>
 
-<% content_for :footer do %>
+<div class="mini-app-footer">
   <input type="text" class="form-control attendance-filter"
          placeholder="Filter students…" aria-label="Filter students"
-         data-filter-target="input" data-action="input->filter#apply">
-<% end %>
+         data-filter-target="input" data-action="input->filter#apply keydown.esc->filter#clear keydown.enter->filter#go"
+         autocomplete="off">
+</div>

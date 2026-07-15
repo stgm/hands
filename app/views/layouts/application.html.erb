@@ -24,13 +24,15 @@
       No navbar — navigation lives in the top-level menu at the root path. %>
   <body class="mini-app">
     <div class="mini-app-container <%= "wide" if content_for?(:wide) %> <%= yield :container_class %>" <%= yield :container_data %>>
-      <div class="mini-app-header">
-        <%# With no navbar, the header icon is the way back to the top-level menu. %>
-        <%= link_to (content_for?(:app_icon) ? yield(:app_icon) : "✋"), root_path,
-              class: "icon text-decoration-none", title: "Menu" %>
-        <h1><%= content_for?(:app_title) ? yield(:app_title) : (content_for(:title) || "Hands") %></h1>
-        <h3 class="text-body-secondary"><%= yield :app_subtitle %></h3>
-      </div>
+      <% unless content_for?(:no_header) %>
+        <div class="mini-app-header">
+          <%# With no navbar, the header icon is the way back to the top-level menu. %>
+          <%= link_to (content_for?(:app_icon) ? yield(:app_icon) : "✋"), root_path,
+                class: "icon text-decoration-none", title: "Menu" %>
+          <h1><%= content_for?(:app_title) ? yield(:app_title) : (content_for(:title) || "Hands") %></h1>
+          <h3 class="text-body-secondary"><%= yield :app_subtitle %></h3>
+        </div>
+      <% end %>
 
       <% if flash.any? %>
         <div class="mini-app-flash">
@@ -38,15 +40,7 @@
         </div>
       <% end %>
 
-      <div class="mini-app-body hands-app <%= yield :body_class %>" <%= yield :body_data %>>
-        <%= yield %>
-      </div>
-
-      <% if content_for?(:footer) %>
-        <div class="mini-app-footer">
-          <%= yield :footer %>
-        </div>
-      <% end %>
+      <%= yield %>
     </div>
   </body>
 </html>

@@ -3,11 +3,13 @@
 <% content_for :app_title, t("hands.assistance") %>
 <% content_for :app_subtitle, @domain.name %>
 
-<%# Not embedded: the widget renders as full mini-app cards (the embedded copy
-    instead gets the compact popup styling from embed/widget.css in its Shadow DOM). %>
-<div id="hand_widget"
-     data-controller="widget"
-     data-widget-domain-value="<%= @domain.slug %>"
-     data-widget-source-value="<%= @source_label %>">
-  <%= render "hands/raises/widget", **@widget_state.locals %>
+<div class="mini-app-body hands-app">
+  <%# Not embedded: the widget renders as full mini-app cards (the embedded copy
+      instead gets the compact popup styling from embed/widget.css in its Shadow DOM). %>
+  <div id="hand_widget"
+       data-controller="widget"
+       data-widget-domain-value="<%= @domain.slug %>"
+       data-widget-source-value="<%= @source_label %>">
+    <%= render "hands/raises/widget", **@widget_state.locals %>
+  </div>
 </div>
