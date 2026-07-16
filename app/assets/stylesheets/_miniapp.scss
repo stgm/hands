@@ -28,16 +28,6 @@ body.mini-app {
     /* row-gap: 1rem; */
 
     grid-area: main;
-
-    > .mini-app-footer {
-        flex-shrink: 0;
-        display: grid;
-    }
-
-    > .mini-app-footer .action {
-        background-color: $primary;
-        width: 100%;
-    }
 }
 
 .mini-app-header {
@@ -161,5 +151,53 @@ body.mini-app {
         width: 80%;
         max-width: 64rem;
         min-width: 30rem;
+    }
+}
+
+// Footer action buttons: plain `a`/`button`/`input[type=submit]` elements,
+// no Bootstrap .btn dependency, so the pill shape and color apply no matter
+// which tag a given footer view happens to render. Laid out in a single
+// horizontal row (grid-auto-flow: column) with equal-width columns: one
+// action fills the whole row, two share it evenly with a gap between.
+.mini-app-footer {
+    flex-shrink: 0;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0.75rem;
+
+    // Grid items default to min-width:auto, which lets a child that refuses
+    // to shrink (e.g. the notes composer's Trix toolbar) blow out its own
+    // column instead of clipping to it — Trix already scrolls its toolbar
+    // horizontally when tight (see trix-button-row's own overflow-x:auto),
+    // but only gets the chance to if we let the column shrink to fit first.
+    > * {
+        min-width: 0;
+    }
+
+    .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 2.5rem;
+        padding-inline: 1rem;
+        border: none;
+        border-radius: 3rem;
+        corner-shape: squircle;
+        background-color: $light;
+        color: $dark;
+        font-weight: 500;
+        text-decoration: none;
+
+        &.primary {
+            background-color: $primary;
+            color: #fff;
+        }
+
+        &.danger {
+            background-color: $danger;
+            color: #fff;
+        }
     }
 }

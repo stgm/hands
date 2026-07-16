@@ -17,18 +17,19 @@
               method: :put, class: "btn btn-primary w-100 me-md-2" %>
         <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
               method: :put, class: "btn btn-secondary w-100",
-              form: { data: { turbo_confirm: "Sure to delete this request?" } } %>
+              form: { data: { controller: "back-redirect", turbo_confirm: "Sure to delete this request?" } } %>
       </div>
     <% else %>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <%= button_to "Mark as done", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: true),
-              method: :put, class: "btn btn-primary w-100 me-md-2" %>
+              method: :put, class: "btn btn-primary w-100 me-md-2",
+              form: { data: { controller: "back-redirect" } } %>
         <%= button_to "Put back in list", helpline_domain_queue_hand_path(current_course_domain.slug, @hand),
               method: :put, class: "btn btn-secondary w-100 me-md-2",
-              form: { data: { turbo_confirm: "Are you sure someone is available for extra help?" } } %>
+              form: { data: { controller: "back-redirect", turbo_confirm: "Are you sure someone is available for extra help?" } } %>
         <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
               method: :put, class: "btn btn-secondary w-100",
-              form: { data: { turbo_confirm: "Sure to delete this request?" } } %>
+              form: { data: { controller: "back-redirect", turbo_confirm: "Sure to delete this request?" } } %>
       </div>
     <% end %>
   </div>

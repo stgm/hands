@@ -7,11 +7,18 @@
 <% if logged_in? %>
   <nav class="mini-app-body" aria-label="Main menu">
     <ul class="menu" role="list" data-controller="menu">
-      <% @domains.each do |domain| %>
-        <li><%= link_to domain.name, domain_root_path(domain.slug) %></li>
+      <% @memberships.each do |membership| %>
+        <% domain = membership.course_domain %>
+        <li>
+          <% if student_only?(membership) %>
+            <%= link_to domain.name, domain_hand_path(domain.slug) %>
+          <% else %>
+            <%= link_to domain.name, domain_root_path(domain.slug) %>
+          <% end %>
+        </li>
       <% end %>
 
-      <% if @domains.none? %>
+      <% if @memberships.none? %>
         <li class="menu-message">You are not a member of any course domain yet.</li>
       <% end %>
 
@@ -22,7 +29,7 @@
         <%= link_to "Manage domains", admin_course_domains_path, class: "action" %>
     <% end %>
 
-    <%= button_to "Sign out", logout_path, method: :delete, class: "action text-danger",
+    <%= button_to "Sign out", logout_path, method: :delete, class: "action danger",
           form: { data: { turbo_confirm: "Sign out?" } } %>
   </div>
 <% else %>
@@ -33,6 +40,6 @@
     </div>
   </div>
   <div class="mini-app-footer">
-    <%= link_to "Sign in", auth_mail_login_path, class: "btn btn-primary w-100" %>
+    <%= link_to "Sign in", auth_mail_login_path, class: "action primary" %>
   </div>
 <% end %>
