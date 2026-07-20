@@ -58,6 +58,9 @@ gem "rack-attack"
 # cross-origin embed API (student widget lives on another domain)
 gem "rack-cors"
 
+# email hard error reports in production (as in course-site)
+gem "exception_notification"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
