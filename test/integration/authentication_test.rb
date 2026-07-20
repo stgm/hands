@@ -21,14 +21,15 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
         assert_select "body", /Sign out/
     end
 
-    test "email code login creates a new account" do
+    test "email code login creates a new account and asks for a profile" do
         assert_difference -> { User.count }, 1 do
             perform_enqueued_jobs do
                 post auth_mail_create_path, params: { email: "fresh@example.org" }
             end
             post auth_mail_validate_path, params: { code: latest_login_code }
         end
-        assert_redirected_to root_path
+        # a brand-new account has no name yet, so ask before anything else
+        assert_redirected_to edit_profile_path
     end
 
     test "a wrong code does not sign you in" do

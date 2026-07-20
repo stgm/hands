@@ -57,6 +57,10 @@ module Authentication
     # After a successful login, return to the page that sent the user to sign in
     # (e.g. a course-domain URL), falling back to the dashboard.
     def after_sign_in_path
+        # Ask for the missing profile details right away, keeping :return_to in
+        # the session so saving the profile lands the user where they meant to go.
+        return edit_profile_path unless current_user.valid_profile?
+
         session.delete(:return_to) || root_path
     end
 end
