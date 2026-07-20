@@ -29,10 +29,10 @@
         <h5>Enrollment is closed.<br><small class="text-body-secondary">Use the widget in your course site, or ask a teacher.</small></h5>
       <% end %>
     </div>
-    <% if @course_domain.enrollment_open? %>
-      <div class="d-grid">
-        <%= button_to "Join #{@course_domain.name}", domain_join_path(@course_domain.slug), method: :post, class: "btn btn-primary w-100" %>
-      </div>
-    <% end %>
   </div>
+  <% if @course_domain.enrollment_open? %>
+    <div class="mini-app-footer">
+      <%= button_to "Join #{@course_domain.name}", domain_join_path(@course_domain.slug), method: :post, class: "btn btn-primary w-100" %>
+    </div>
+  <% end %>
 <% end %>
