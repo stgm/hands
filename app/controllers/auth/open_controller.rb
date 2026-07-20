@@ -67,7 +67,14 @@ class Auth::OpenController < ApplicationController
 
     def authorization_uri
         session[:oidc_state] = SecureRandom.hex(16)
-        client.authorization_uri(scope: %w[openid email profile], state: session[:oidc_state])
+        client.authorization_uri(scope: scope, state: session[:oidc_state])
+    end
+
+    # SURFconext rejects scopes that are not registered on the client. The other
+    # proglab apps request only "openid", so match that by default; override via
+    # OIDC_SCOPE (space-separated) once extra scopes are registered.
+    def scope
+        ENV.fetch("OIDC_SCOPE", "openid").split
     end
 
     def user_info(token)
