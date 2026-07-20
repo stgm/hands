@@ -34,7 +34,7 @@ class Auth::MailController < ApplicationController
             ExceptionNotifier.notify_exception(e) if defined?(ExceptionNotifier)
             clear_login_session
             redirect_to auth_mail_login_path,
-                alert: "Could not send the code right now, please try again later" and return
+                alert: "Could not send the code right now, please try again later #{e.message}" and return
         end
 
         session[:login_email] = entry
