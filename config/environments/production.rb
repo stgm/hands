@@ -57,9 +57,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = {
-    host: ENV.fetch("APP_HOST", ENV["MAILER_DOMAIN"]), protocol: "https"
-  }
+  config.action_mailer.default_url_options = { host: ENV["APP_HOST"], protocol: "https" }
 
   # Outgoing SMTP server, supplied via k8s env vars. Authentication is optional:
   # the relay may accept mail from inside the cluster without credentials.
