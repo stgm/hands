@@ -22,12 +22,24 @@ class Auth::MailController < ApplicationController
             redirect_to auth_mail_login_path, alert: "Email seems invalid" and return
         end
 
-        session[:login_email] = entry
         # 6-hex-digit code, stored only as a SHA256 hash with an issue time
         code = SecureRandom.hex(3)
+
+        # Sent inline rather than via Active Job: a login code is worthless if it
+        # is delayed, and this keeps sign-in working even when no worker runs.
+        begin
+            AuthMailer.with(email: entry, code: code).login_code.deliver_now
+        rescue StandardError => e
+            Rails.logger.error("Login code delivery failed for #{entry}: #{e.class}: #{e.message}")
+            ExceptionNotifier.notify_exception(e) if defined?(ExceptionNotifier)
+            clear_login_session
+            redirect_to auth_mail_login_path,
+                alert: "Could not send the code right now, please try again later" and return
+        end
+
+        session[:login_email] = entry
         session[:login_secret] = Digest::SHA256.hexdigest(code)
         session[:login_secret_at] = Time.now.to_i
-        AuthMailer.with(email: entry, code: code).login_code.deliver_later
         redirect_to auth_mail_code_path
     end
 
