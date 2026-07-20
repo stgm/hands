@@ -28,18 +28,15 @@ module DomainScoped
         @course_domain
     end
 
-    # Standalone domain pages require a full login with a usable profile. Unlike
-    # the embed path (token-authed), this uses the session cookie and remembers
-    # where to return after signing in.
+    # Standalone domain pages require a full login. Unlike the embed path
+    # (token-authed), this uses the session cookie and remembers where to return
+    # after signing in. The profile requirement is enforced globally by
+    # Authentication#require_profile, which runs before this.
     def require_login
-        return if logged_in? && current_user.valid_profile?
+        return if logged_in?
 
         session[:return_to] = request.fullpath if request.get?
-        if !logged_in?
-            redirect_to auth_mail_login_path
-        else
-            redirect_to edit_profile_path
-        end
+        redirect_to auth_mail_login_path
     end
 
     def set_membership

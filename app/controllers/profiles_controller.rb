@@ -1,4 +1,5 @@
 class ProfilesController < ApplicationController
+    skip_before_action :require_profile
     before_action :authenticate
 
     def edit

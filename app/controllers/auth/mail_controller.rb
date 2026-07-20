@@ -1,4 +1,6 @@
 class Auth::MailController < ApplicationController
+    skip_before_action :require_profile
+
     # Login by email using a one-time code (ported from course-site).
 
     # layout "auth"

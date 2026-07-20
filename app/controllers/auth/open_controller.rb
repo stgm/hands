@@ -1,4 +1,6 @@
 class Auth::OpenController < ApplicationController
+    skip_before_action :require_profile
+
     # Login by OpenID Connect as configured in the environment (ported from
     # course-site). Disabled unless the OIDC_* env vars are present.
 
