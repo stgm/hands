@@ -9,7 +9,9 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     test "email code login signs in an existing user" do
         perform_enqueued_jobs do
-            post auth_mail_create_path, params: { email: "student@example.com" }
+            # a TA sees the domain list; a single-course student would be sent
+            # straight to the hand page instead (see HomeController#index)
+            post auth_mail_create_path, params: { email: "ta@example.com" }
         end
         assert_redirected_to auth_mail_code_path
 

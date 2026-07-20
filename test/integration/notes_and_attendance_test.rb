@@ -62,12 +62,12 @@ class NotesAndAttendanceTest < ActionDispatch::IntegrationTest
         sign_in_as(users(:ta))
         get domain_attendance_path(@domain.slug)
         assert_response :success
-        assert_select ".student-card--present .card-title", /Sam Student/
+        assert_select ".student-card--present .student-card__name", /Sam Student/
 
         travel (Settings.presence_stale_after + 5).seconds do
             get domain_attendance_path(@domain.slug)
             assert_select ".student-card--present", count: 0
-            assert_select ".card-title", /Sam Student/
+            assert_select ".student-card__name", /Sam Student/
         end
     end
 end
