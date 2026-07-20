@@ -11,7 +11,9 @@
 
   <% if Auth::OpenController.available? %>
     <hr class="my-4">
-    <%= link_to "Sign in with institutional account", auth_open_login_path, class: "btn btn-outline-secondary w-100" %>
+    <%# Auth can't go through turbo %>
+    <%= link_to "Sign in with institutional account", auth_open_login_path,
+        class: "btn btn-outline-secondary w-100", data: { turbo: "false" } %>
   <% end %>
 </div>
 

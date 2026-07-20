@@ -11,6 +11,9 @@
     <meta name="application-name" content="Hands">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#F4F9FF">
+    <%# Hover-prefetch issues a real GET, which would consume single-use tokens
+        (OIDC state, sign-out) before the user actually clicks. %>
+    <meta name="turbo-prefetch" content="false">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
