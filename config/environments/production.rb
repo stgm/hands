@@ -89,8 +89,9 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   # Linked course-sites open cross-origin WebSocket connections to /cable for the
-  # embed widget. List their origins in HANDS_ALLOWED_WS_ORIGINS (comma-separated).
-  if (origins = ENV["HANDS_ALLOWED_WS_ORIGINS"]).present?
-    config.action_cable.allowed_request_origins = origins.split(",").map(&:strip)
-  end
+  # embed widget, so Action Cable's own same-origin check cannot be the gate.
+  # ApplicationCable::Connection enforces origin per connection instead: any
+  # origin may present an embed token, while the cookie-authenticated path stays
+  # same-origin. See the comments there.
+  config.action_cable.disable_request_forgery_protection = true
 end

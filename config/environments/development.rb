@@ -75,9 +75,11 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   config.action_view.annotate_rendered_view_with_filenames = true
 
-  # The embed widget connects to /cable cross-origin from a linked course-site;
-  # the embed token secures the connection, so origin forgery protection is off
-  # in development. In production, set an explicit allow-list instead (below).
+  # The embed widget connects to /cable cross-origin from a linked course-site,
+  # so Action Cable's own same-origin check cannot be the gate.
+  # ApplicationCable::Connection enforces origin per connection instead: any
+  # origin may present an embed token, while the cookie-authenticated path stays
+  # same-origin. See the comments there. Production does the same.
   config.action_cable.disable_request_forgery_protection = true
 
   # Raise error when a before_action's only/except options reference missing actions.
