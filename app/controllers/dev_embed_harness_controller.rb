@@ -13,11 +13,11 @@ class DevEmbedHarnessController < ActionController::Base
             "slug" => domain.slug,
             "site_label" => "dev-harness",
             "locale" => params[:locale].presence || "en",
-            "exp" => Time.now.to_i + 120,
             "nonce" => SecureRandom.hex(12)
         }
-        # Mirrors course-site: the widget only needs the token back.
-        render json: { token: Embed::Token.encode(payload, domain.link_secret) }
+        # Mirrors course-site: the widget only needs the token back, and expiry
+        # rides in the encrypted metadata rather than in the payload.
+        render json: { token: Embed::Token.encode(payload, domain.link_secret, domain.slug) }
     end
 
     def host

@@ -13,10 +13,11 @@ class Embed::TokenVerifierTest < ActiveSupport::TestCase
             "student_number" => "99887766",
             "slug" => domain.slug,
             "site_label" => "coursesite-a",
-            "exp" => Time.now.to_i + 120,
             "nonce" => SecureRandom.hex(8)
         }.merge(overrides.transform_keys(&:to_s))
-        Embed::Token.encode(payload, secret)
+        # The cleartext prefix and the encrypted payload carry the same slug, so
+        # a slug: override moves both (the prefix is what selects the key).
+        Embed::Token.encode(payload, secret, payload["slug"])
     end
 
     test "a valid token resolves to an auto-enrolled student membership" do
@@ -36,7 +37,7 @@ class Embed::TokenVerifierTest < ActiveSupport::TestCase
 
     test "a wrong secret is rejected" do
         result = Embed::TokenVerifier.call(token_for(@domain, secret: "not-the-secret"))
-        assert_equal "bad signature", result.error
+        assert_equal "bad token", result.error
     end
 
     test "an unknown slug is rejected" do
@@ -45,8 +46,35 @@ class Embed::TokenVerifierTest < ActiveSupport::TestCase
     end
 
     test "an expired token is rejected" do
-        result = Embed::TokenVerifier.call(token_for(@domain, exp: Time.now.to_i - 60))
-        assert_equal "expired", result.error
+        token = token_for(@domain)
+        travel_to(Time.now + Embed::Token::TTL + 1) do
+            assert_equal "bad token", Embed::TokenVerifier.call(token).error
+        end
+    end
+
+    # The slug rides outside the ciphertext because it selects the key, so it is
+    # the one field an attacker can actually reach. It is bound in as the AEAD
+    # purpose: repointing it at another domain must not produce a usable token.
+    test "a token whose cleartext slug is repointed at another domain is rejected" do
+        token = token_for(@domain)
+        _prefix, blob = token.split(".", 2)
+        repointed = "#{Base64.urlsafe_encode64(@closed.slug, padding: false)}.#{blob}"
+        assert_equal "bad token", Embed::TokenVerifier.call(repointed).error
+    end
+
+    # One domain's link_secret must never mint a token another domain accepts.
+    test "a token minted with another domain's secret is rejected" do
+        result = Embed::TokenVerifier.call(token_for(@domain, secret: @closed.link_secret))
+        assert_equal "bad token", result.error
+    end
+
+    test "a token without a nonce is rejected rather than being freely replayable" do
+        payload = {
+            "email" => "no.nonce@example.com", "name" => "No Nonce",
+            "student_number" => "1", "slug" => @domain.slug, "site_label" => "coursesite-a"
+        }
+        token = Embed::Token.encode(payload, @domain.link_secret, @domain.slug)
+        assert_equal "replayed", Embed::TokenVerifier.call(token).error
     end
 
     test "a replayed nonce is rejected the second time" do

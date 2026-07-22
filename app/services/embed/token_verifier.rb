@@ -9,9 +9,6 @@ module Embed
             end
         end
 
-        # Allow a little clock skew between the two servers.
-        LEEWAY = 30
-
         def self.call(token)
             new(token).call
         end
@@ -21,10 +18,11 @@ module Embed
         end
 
         def call
-            unverified = Token.read_unverified(@token) or return fail!("malformed token")
-            domain = CourseDomain.find_by(slug: unverified["slug"]) or return fail!("unknown domain")
-            payload = Token.verify(@token, domain.link_secret) or return fail!("bad signature")
-            return fail!("expired") if expired?(payload)
+            slug = Token.read_slug(@token) or return fail!("malformed token")
+            domain = CourseDomain.find_by(slug: slug) or return fail!("unknown domain")
+            # One step covers tampering, a swapped slug and expiry: the slug is
+            # bound in as the AEAD purpose and the TTL rides in the metadata.
+            payload = Token.verify(@token, domain.link_secret, slug) or return fail!("bad token")
             return fail!("replayed") unless fresh_nonce?(payload)
 
             user = User.authenticate(
@@ -50,16 +48,15 @@ module Embed
             membership.update(locale: locale.to_s)
         end
 
-        def expired?(payload)
-            exp = payload["exp"].to_i
-            exp.zero? || exp < (Time.now.to_i - LEEWAY)
-        end
-
-        # Single-use nonce, held in the cache for the token's plausible lifetime.
-        # A blank nonce is allowed (older callers) but course-site always sends one.
+        # Single-use nonce, held in the cache well past the token's lifetime.
+        # Required, not optional: a token reaching us without one would be freely
+        # replayable for its whole TTL by anyone who scraped it out of a proxy
+        # access log, which is the exact exposure the encrypted format is here to
+        # shut down. (Tolerating a blank nonce made sense only while pre-v2
+        # callers existed; the format break retired those.)
         def fresh_nonce?(payload)
             nonce = payload["nonce"].to_s
-            return true if nonce.blank?
+            return false if nonce.blank?
 
             Rails.cache.write("embed:nonce:#{nonce}", true, unless_exist: true, expires_in: 10.minutes)
         end

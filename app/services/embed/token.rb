@@ -1,49 +1,83 @@
 module Embed
-    # The signed-token contract shared with every linked course-site.
+    # The encrypted-token contract shared with every linked course-site.
     #
-    # Wire format (compact, JWT-ish but dependency-free):
+    # Wire format:
     #
-    #     base64url(JSON payload) + "." + base64url(HMAC-SHA256(payload_b64, secret))
+    #     base64url(slug) + "." + MessageEncryptor blob (url_safe base64)
     #
-    # The payload is a JSON object with string keys:
-    #   email, name, student_number, slug, site_label, exp (unix seconds), nonce
+    # The slug travels in the clear because it is what *selects* the key: the
+    # verifier has to know which CourseDomain's link_secret to decrypt with
+    # before it can decrypt anything. It is bound into the AEAD as the message
+    # purpose, so swapping it invalidates the token.
+    #
+    # Everything else is encrypted. The payload is a JSON object with string keys:
+    #   email, name, student_number, slug, site_label, locale, nonce
+    #
+    # Encrypting rather than merely signing matters because the token travels in a
+    # WebSocket query string (/cable?token=...). Rails filters :token from its own
+    # logs, but the reverse proxy in front of this app logs full request URIs, and
+    # a signed-only payload would put every student's email, name and student
+    # number in those logs in plainly decodable base64.
     #
     # course-site mints these with a course domain's link_secret; the hands app
-    # verifies with the same secret. Both sides MUST implement this identically —
-    # the contract is covered by a shared test vector (see the token tests).
+    # decrypts with the same secret. Both sides MUST implement this identically —
+    # the contract is covered by a frozen ciphertext fixture (see the token tests).
     module Token
+        # 120s of usable lifetime plus 30s of clock skew between the two servers.
+        # MessageEncryptor's expiry has no leeway of its own, so a verifier whose
+        # clock runs ahead would otherwise reject a freshly minted token.
+        TTL = 150
+
+        # HKDF, not ActiveSupport::KeyGenerator: link_secret is already a 36-char
+        # has_secure_token, so PBKDF2's stretching buys nothing and would cost
+        # ~50ms on every mint and every verify.
+        HKDF_SALT = "hands-embed".freeze
+        HKDF_INFO = "aes-256-gcm-v2".freeze
+
         module_function
 
-        def encode(payload, secret)
-            body = base64url(JSON.generate(payload))
-            "#{body}.#{signature(body, secret)}"
+        def encode(payload, secret, slug)
+            "#{base64url(slug.to_s)}.#{encryptor(secret).encrypt_and_sign(payload, purpose: slug.to_s, expires_in: TTL)}"
         end
 
-        # Decode without verifying the signature — only to read the slug so we can
-        # look up which secret to verify against. Never trust this result.
-        def read_unverified(token)
-            body, _sig = token.to_s.split(".", 2)
-            JSON.parse(unbase64url(body))
+        # Read the slug without decrypting — only to look up which secret to verify
+        # against. Never trust this on its own; verify binds it as the purpose.
+        def read_slug(token)
+            prefix, blob = token.to_s.split(".", 2)
+            return nil if prefix.blank? || blob.blank?
+
+            unbase64url(prefix)
         rescue StandardError
             nil
         end
 
-        # Verify the signature with the given secret; returns the payload Hash or
-        # nil. Constant-time comparison guards against timing attacks.
-        def verify(token, secret)
-            body, sig = token.to_s.split(".", 2)
-            return nil if body.blank? || sig.blank?
+        # Decrypt and authenticate with the given secret; returns the payload Hash
+        # or nil. Covers tampering, expiry and a swapped slug in one step.
+        def verify(token, secret, slug)
+            _prefix, blob = token.to_s.split(".", 2)
+            return nil if blob.blank?
 
-            expected = signature(body, secret)
-            return nil unless ActiveSupport::SecurityUtils.secure_compare(sig, expected)
-
-            JSON.parse(unbase64url(body))
+            encryptor(secret).decrypt_and_verify(blob, purpose: slug.to_s)
         rescue StandardError
             nil
         end
 
-        def signature(body, secret)
-            base64url(OpenSSL::HMAC.digest("SHA256", secret.to_s, body))
+        # serializer: JSON is pinned deliberately. MessageEncryptor's default
+        # serializer follows each app's config.load_defaults (this app is on 8.1,
+        # course-site on 8.0), so leaving it implicit would make the wire format
+        # depend on two Rails versions agreeing. JSON also keeps Marshal out of
+        # the decrypt path entirely.
+        def encryptor(secret)
+            ActiveSupport::MessageEncryptor.new(
+                derive_key(secret), cipher: "aes-256-gcm", serializer: JSON, url_safe: true
+            )
+        end
+
+        # Memoized: the same handful of secrets are used over and over.
+        def derive_key(secret)
+            @keys ||= {}
+            @keys[secret.to_s] ||=
+                OpenSSL::KDF.hkdf(secret.to_s, salt: HKDF_SALT, info: HKDF_INFO, length: 32, hash: "SHA256")
         end
 
         def base64url(bytes)

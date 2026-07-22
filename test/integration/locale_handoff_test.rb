@@ -11,10 +11,9 @@ class LocaleHandoffTest < ActionDispatch::IntegrationTest
             "slug" => @domain.slug,
             "site_label" => "coursesite-nl",
             "locale" => locale,
-            "exp" => Time.now.to_i + 120,
             "nonce" => SecureRandom.hex(8)
         }
-        Embed::Token.encode(payload, @domain.link_secret)
+        Embed::Token.encode(payload, @domain.link_secret, @domain.slug)
     end
 
     test "the embedded widget renders in the language the course-site hands over" do

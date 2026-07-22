@@ -11,10 +11,9 @@ class EmbedHandsTest < ActionDispatch::IntegrationTest
             "student_number" => "55554444",
             "slug" => @domain.slug,
             "site_label" => "coursesite-a",
-            "exp" => Time.now.to_i + 120,
             "nonce" => SecureRandom.hex(8)
         }.merge(overrides.transform_keys(&:to_s))
-        Embed::Token.encode(payload, @domain.link_secret)
+        Embed::Token.encode(payload, @domain.link_secret, payload["slug"])
     end
 
     def auth_header(**o)
