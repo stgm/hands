@@ -137,6 +137,8 @@ GEM
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
+    foreman (0.90.0)
+      thor (~> 1.4)
     friendly_id (5.7.0)
       activerecord (>= 4.0.0)
     fugit (1.13.0)
@@ -491,6 +493,7 @@ DEPENDENCIES
   dartsass-rails
   debug
   exception_notification
+  foreman
   friendly_id
   image_processing (~> 1.2)
   importmap-rails

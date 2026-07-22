@@ -73,6 +73,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Foreman for https test serving
+  gem "foreman"
 end
 
 group :development do
