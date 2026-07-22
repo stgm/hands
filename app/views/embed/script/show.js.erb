@@ -125,7 +125,8 @@
         }
 
         var key = img.dataset.waitingGifKey.match(/../g).map(function (h) { return parseInt(h, 16); });
-        return fetch(chosen).then(function (res) {
+        var url = /^https?:\/\//.test(chosen) ? chosen : handsBase + chosen;
+        return fetch(url).then(function (res) {
             if (!res.ok) throw new Error("fetch failed");
             return res.arrayBuffer();
         }).then(function (buf) {
