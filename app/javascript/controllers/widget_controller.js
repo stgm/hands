@@ -9,6 +9,7 @@ export default class extends Controller {
     static values = { domain: String, source: String }
 
     connect() {
+        this.generation = (this.generation || 0) + 1
         this.subscription = consumer.subscriptions.create(
             { channel: "WidgetChannel", domain: this.domainValue, source_label: this.sourceValue },
             { received: (data) => { if (data.html) this.swap(data.html) } }
@@ -21,7 +22,13 @@ export default class extends Controller {
     disconnect() {
         clearInterval(this.heartbeat)
         if (this.subscription) this.subscription.unsubscribe()
+        // Revoking without also dropping the cached promise would leave a
+        // resolved-to-a-dead-URL promise behind: Stimulus reuses this instance
+        // when the element is re-connected, and setupWaitingGif() would then
+        // assign the revoked blob URL to the fresh <img>. Always clear both.
         if (this.waitingGifObjectUrl) { URL.revokeObjectURL(this.waitingGifObjectUrl); this.waitingGifObjectUrl = null }
+        this.waitingGifPromise = null
+        this.generation = (this.generation || 0) + 1
     }
 
     swap(html) {
@@ -60,7 +67,12 @@ export default class extends Controller {
             this.waitingGifPromise = this.decodeWaitingGif(img).catch((e) => { this.waitingGifPromise = null; throw e })
         }
 
+        const generation = this.generation
         this.waitingGifPromise.then((url) => {
+            // A disconnect while the decode was in flight bumps generation on
+            // the next connect(); that run has its own promise, so drop this
+            // url rather than leaking it or showing it on a stale element.
+            if (generation !== this.generation) { URL.revokeObjectURL(url); return }
             this.waitingGifObjectUrl = url
             const currentImg = this.element.querySelector("#waiting-gif")
             if (currentImg) currentImg.src = url
