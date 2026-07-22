@@ -41,7 +41,7 @@ class WidgetStateTest < ActiveSupport::TestCase
         assert_equal :form, WidgetState.for(@student).state
     end
 
-    test "only the check-in state asks the host page for attention" do
+    test "every state with news for the student asks the host page for attention" do
         @domain.update!(location_bumper: true, link_mode: false)
         @student.update!(last_location: nil)
         assert WidgetState.for(@student).attention?
@@ -49,8 +49,11 @@ class WidgetStateTest < ActiveSupport::TestCase
         @student.update!(last_location: "Table 4")
         assert_not WidgetState.for(@student).attention?
 
-        Hand.create!(course_domain: @domain, membership: @student, help_question: "q")
-        assert_not WidgetState.for(@student).attention?
+        hand = Hand.create!(course_domain: @domain, membership: @student, help_question: "q")
+        assert WidgetState.for(@student).attention?
+
+        hand.claim!(@ta)
+        assert WidgetState.for(@student).attention?
     end
 
     test "greeting is one of the time-of-day phrases" do

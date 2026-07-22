@@ -43,11 +43,12 @@ class WidgetState
         }
     end
 
-    # Whether the widget is blocking on something the student has to supply
-    # before they can ask anything. Embedding sites use this to pop their menu
-    # open unprompted; only this app can answer it, since the state it depends
-    # on (the domain's bumper setting, the membership's last location) lives
-    # here rather than on the site doing the embedding.
+    # Whether the widget has something new to tell the student: check in, you're
+    # in line, someone is helping you. Embedding sites use this to pop their menu
+    # open unprompted, one pop per piece of news; only this app can answer it,
+    # since the state it depends on (the domain's bumper setting, the
+    # membership's last location, the queue) lives here rather than on the site
+    # doing the embedding.
     def attention?
         state.in? [ :location, :waiting, :helping ]
     end
