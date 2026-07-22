@@ -38,8 +38,18 @@ class WidgetState
     def locals
         {
             state: state, hand: hand, position: position, assist: assist,
-            domain: domain, membership: membership, greeting: greeting
+            domain: domain, membership: membership, greeting: greeting,
+            attention: attention?
         }
+    end
+
+    # Whether the widget is blocking on something the student has to supply
+    # before they can ask anything. Embedding sites use this to pop their menu
+    # open unprompted; only this app can answer it, since the state it depends
+    # on (the domain's bumper setting, the membership's last location) lives
+    # here rather than on the site doing the embedding.
+    def attention?
+        state.in? [ :location, :waiting, :helping ]
     end
 
     # Time-of-day greeting for the check-in view (ported from course-site's ranges).

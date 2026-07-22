@@ -28,6 +28,17 @@ class EmbedHandsTest < ActionDispatch::IntegrationTest
         assert_select "h1", count: 0 # fragment only, no page chrome
     end
 
+    test "the fragment carries the state marker the embed loader reports to its host" do
+        @domain.update!(location_bumper: true, link_mode: false)
+
+        get embed_hand_path, headers: auth_header
+        assert_select 'meta[name=?][content=?][data-attention=?]', "hands-state", "location", "true"
+
+        @domain.memberships.last.update!(last_location: "Table 4")
+        get embed_hand_path, headers: auth_header
+        assert_select 'meta[name=?][content=?][data-attention=?]', "hands-state", "form", "false"
+    end
+
     test "the token can also be passed as a query param" do
         get embed_hand_path(token: token)
         assert_response :success

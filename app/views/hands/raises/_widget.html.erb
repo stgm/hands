@@ -1,5 +1,11 @@
-<%# Locals: state, hand, position, assist, domain, membership, greeting.
-    The wrapping node id must stay stable so realtime updates can replace it. %>
+<%# Locals: state, hand, position, assist, domain, membership, greeting, attention.
+    The wrapping node id must stay stable so realtime updates can replace it.
+
+    The state marker rides along with every render (page load and realtime push
+    alike) so the embed loader can tell its host page what the widget is showing.
+    It is a <meta> because that is inert wherever the widget lands: never
+    rendered, and matched by none of the widget's own styling. %>
+<meta name="hands-state" content="<%= state %>" data-attention="<%= attention %>">
 <%= render "hands/raises/#{state}",
       hand: hand, position: position, assist: assist,
       domain: domain, membership: membership, greeting: greeting %>

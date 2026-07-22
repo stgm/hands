@@ -52,6 +52,26 @@
         bindForms();
         setupWaitingGif();
         focusQuestion(); // no-op while the dropdown is closed / field hidden
+        publishState();
+    }
+
+    // Tell the host page what we are showing. The state marker is inside the
+    // Shadow DOM, where the host cannot see it, so mirror it onto the mount
+    // element and fire an event there. "attention" means the student cannot ask
+    // anything until they give us something (a location check-in) — hosts use it
+    // to pop their menu open unprompted, but whether interrupting is appropriate
+    // is theirs to decide, not ours.
+    function publishState() {
+        var marker = content.querySelector('meta[name="hands-state"]');
+        var state = marker ? marker.getAttribute("content") : "";
+        var attention = !!marker && marker.dataset.attention === "true";
+
+        mount.dataset.handsState = state;
+        mount.dataset.handsAttention = attention ? "true" : "false";
+        mount.dispatchEvent(new CustomEvent("hands:state", {
+            bubbles: true,
+            detail: { state: state, attention: attention }
+        }));
     }
 
     // The fragment's forms point at the hands app's standalone routes; intercept

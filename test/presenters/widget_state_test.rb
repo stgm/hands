@@ -29,7 +29,7 @@ class WidgetStateTest < ActiveSupport::TestCase
     test "locals expose everything the partials need" do
         Hand.create!(course_domain: @domain, membership: @student, help_question: "q")
         locals = WidgetState.for(@student).locals
-        assert_equal %i[state hand position assist domain membership greeting].sort, locals.keys.sort
+        assert_equal %i[state hand position assist domain membership greeting attention].sort, locals.keys.sort
     end
 
     test "location bumper forces a check-in until we know where the student is" do
@@ -39,6 +39,18 @@ class WidgetStateTest < ActiveSupport::TestCase
 
         @student.update!(last_location: "Table 4")
         assert_equal :form, WidgetState.for(@student).state
+    end
+
+    test "only the check-in state asks the host page for attention" do
+        @domain.update!(location_bumper: true, link_mode: false)
+        @student.update!(last_location: nil)
+        assert WidgetState.for(@student).attention?
+
+        @student.update!(last_location: "Table 4")
+        assert_not WidgetState.for(@student).attention?
+
+        Hand.create!(course_domain: @domain, membership: @student, help_question: "q")
+        assert_not WidgetState.for(@student).attention?
     end
 
     test "greeting is one of the time-of-day phrases" do

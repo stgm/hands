@@ -4,6 +4,7 @@ class Hands::QueueController < ApplicationController
     before_action :require_staff
     before_action :require_availability, only: :index
     before_action :load_hand, only: [ :show, :claim, :done, :helpline ]
+    before_action :require_open_hand, only: [ :claim, :done, :helpline ]
 
     # GET /<slug>/queue — the staff queue (all open hands, viewer-independent)
     def index
@@ -47,6 +48,13 @@ class Hands::QueueController < ApplicationController
 
     def load_hand
         @hand = current_course_domain.hands.find(params[:id])
+    end
+
+    # A closed hand is final: it cannot be claimed, reopened or closed again.
+    def require_open_hand
+        return unless @hand.done?
+
+        redirect_to domain_queue_hands_path(current_course_domain.slug), alert: "This request was already closed"
     end
 
     def require_availability
