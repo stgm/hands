@@ -19,18 +19,18 @@ module Embed
     # a signed-only payload would put every student's email, name and student
     # number in those logs in plainly decodable base64.
     #
-    # course-site mints these with a course domain's link_secret; the hands app
+    # course-site creates these with a course domain's link_secret; the hands app
     # decrypts with the same secret. Both sides MUST implement this identically —
     # the contract is covered by a frozen ciphertext fixture (see the token tests).
     module Token
         # 120s of usable lifetime plus 30s of clock skew between the two servers.
         # MessageEncryptor's expiry has no leeway of its own, so a verifier whose
-        # clock runs ahead would otherwise reject a freshly minted token.
+        # clock runs ahead would otherwise reject a freshly created token.
         TTL = 150
 
         # HKDF, not ActiveSupport::KeyGenerator: link_secret is already a 36-char
         # has_secure_token, so PBKDF2's stretching buys nothing and would cost
-        # ~50ms on every mint and every verify.
+        # ~50ms on every create and every verify.
         HKDF_SALT = "hands-embed".freeze
         HKDF_INFO = "aes-256-gcm-v2".freeze
 

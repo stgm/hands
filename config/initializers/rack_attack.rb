@@ -14,7 +14,7 @@ class Rack::Attack
         req.ip if req.path == "/auth/mail/validate" && req.post?
     end
 
-    # Throttle embed token minting on the hands side is unnecessary (course-site
+    # Throttle embed token creation on the hands side is unnecessary (course-site
     # holds the secret); the cross-origin embed endpoints are protected by the
     # signed token itself.
 

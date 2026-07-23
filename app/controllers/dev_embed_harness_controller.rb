@@ -1,4 +1,4 @@
-# Development-only harness to exercise the embed widget flow (token mint +
+# Development-only harness to exercise the embed widget flow (token create +
 # embed/widget.js) without a running course-site. Mimics what course-site does.
 class DevEmbedHarnessController < ActionController::Base
     before_action :require_dev

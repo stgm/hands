@@ -3,7 +3,7 @@ class CourseDomain < ApplicationRecord
     friendly_id :name, use: :slugged
 
     # Shared secret used by any linked course-site to sign embed tokens for
-    # this domain. Rotatable; possession of it authorizes minting student tokens.
+    # this domain. Rotatable; possession of it authorizes creating student tokens.
     has_secure_token :link_secret, length: 36
 
     has_many :memberships, dependent: :destroy

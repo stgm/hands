@@ -62,8 +62,8 @@ class Embed::TokenVerifierTest < ActiveSupport::TestCase
         assert_equal "bad token", Embed::TokenVerifier.call(repointed).error
     end
 
-    # One domain's link_secret must never mint a token another domain accepts.
-    test "a token minted with another domain's secret is rejected" do
+    # One domain's link_secret must never create a token another domain accepts.
+    test "a token created with another domain's secret is rejected" do
         result = Embed::TokenVerifier.call(token_for(@domain, secret: @closed.link_secret))
         assert_equal "bad token", result.error
     end
