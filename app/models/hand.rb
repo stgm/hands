@@ -50,6 +50,14 @@ class Hand < ApplicationRecord
         course_domain.hands.waiting.where("created_at < ?", created_at).count + 1
     end
 
+    def formatted_request_time
+        if self.created_at.today?
+            self.created_at.to_fs(:time)
+        else
+            self.created_at.strftime("%a %H:%M")
+        end
+    end
+
     # Bulk-close waiting hands (e.g. an overnight sweep).
     def self.remove_all_stale
         waiting.update_all(

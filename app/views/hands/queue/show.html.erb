@@ -1,26 +1,32 @@
 <% content_for :title, "Request" %>
 <% content_for :app_icon, "🙋" %>
 <% content_for :app_title, @hand.user.display_name %>
-<% content_for :app_subtitle, @hand.location %>
+<% content_for :app_subtitle, @hand.formatted_request_time %>
 
 <div class="mini-app-body">
   <div class="cards">
     <div class="message">
       <div class="question">
-      <h4>Request:</h4>
-      <p>
-        <% if @hand.subject.present? %><strong><%= @hand.subject %></strong>&mdash;<% end %><%= @hand.help_question %>
-      </p>
+        <h4><%= @hand.course_domain.location_type.capitalize %>:</h4>
+        <p><%= @hand.location %></p>
+        <h4>Request:</h4>
+        <p>
+          "<% if @hand.subject.present? %><strong><%= @hand.subject %></strong>&mdash;<% end %><%= @hand.help_question %>"
+        </p>
       </div>
     </div>
     <div class="message">
       <p>
         <% if @hand.done? %>
-          Handled by <%= staff_name(@hand.assist) %>
+          Closed by
+          <%= staff_name(@hand.assist) %>
+          at
+          <%= @hand.closed_at %>
         <% elsif @hand.assist %>
-          Picked up by <%= staff_name(@hand.assist) %>
+          Picked up by <%= staff_name(@hand.assist) %>!
         <% else %>
-          Waiting for <%= ((Time.current - @hand.created_at) / 60).round %> minutes
+          Waiting since
+          <%= time_ago_in_words(@hand.created_at) %>.
         <% end %>
       </p>
     </div>
@@ -30,24 +36,51 @@
 <%# A closed hand has no remaining actions, so the footer is dropped entirely. %>
 <% unless @hand.done? %>
   <div class="mini-app-footer">
-    <%# button_to wraps each button in a form; the form stretches to fill the
-       grid/flex track but the button itself needs w-100 to fill it in turn. %>
     <% if @hand.assist.nil? %>
-      <%= button_to "Start helping", claim_domain_queue_hand_path(current_course_domain.slug, @hand),
-              method: :put, class: "btn btn-primary w-100 me-md-2" %>
-      <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
-              method: :put, class: "btn btn-secondary w-100",
-              form: { data: { controller: "back-redirect", turbo_confirm: "Sure to delete this request?" } } %>
+      <%= button_to "Start helping",
+      claim_domain_queue_hand_path(current_course_domain.slug, @hand),
+      method: :put,
+      class: "btn btn-primary w-100 me-md-2" %>
+      <%= button_to "Delete",
+      done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
+      method: :put,
+      class: "btn btn-secondary w-100",
+      form: {
+        data: {
+          controller: "back-redirect",
+          turbo_confirm: "Sure to delete this request?",
+        },
+      } %>
     <% else %>
-      <%= button_to "Done", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: true),
-              method: :put, class: "btn btn-primary w-100 me-md-2",
-              form: { data: { controller: "back-redirect" } } %>
-      <%= button_to "Put back", helpline_domain_queue_hand_path(current_course_domain.slug, @hand),
-              method: :put, class: "btn btn-secondary w-100 me-md-2",
-              form: { data: { controller: "back-redirect", turbo_confirm: "Are you sure someone is available for extra help?" } } %>
-      <%= button_to "Delete", done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
-              method: :put, class: "btn btn-secondary w-100",
-              form: { data: { controller: "back-redirect", turbo_confirm: "Sure to delete this request?" } } %>
+      <%= button_to "Done",
+      done_domain_queue_hand_path(current_course_domain.slug, @hand, success: true),
+      method: :put,
+      class: "btn btn-primary w-100 me-md-2",
+      form: {
+        data: {
+          controller: "back-redirect",
+        },
+      } %>
+      <%= button_to "Put back",
+      helpline_domain_queue_hand_path(current_course_domain.slug, @hand),
+      method: :put,
+      class: "btn btn-secondary w-100 me-md-2",
+      form: {
+        data: {
+          controller: "back-redirect",
+          turbo_confirm: "Are you sure someone is available for extra help?",
+        },
+      } %>
+      <%= button_to "Delete",
+      done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
+      method: :put,
+      class: "btn btn-secondary w-100",
+      form: {
+        data: {
+          controller: "back-redirect",
+          turbo_confirm: "Sure to delete this request?",
+        },
+      } %>
     <% end %>
   </div>
 <% end %>
