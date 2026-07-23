@@ -1,17 +1,5 @@
-// Simple UL > LI > A/BUTTON navigation menu, styled from scratch with no
-// Bootstrap list-group dependency. Base layout is a single-column grid;
-// pages that need more columns (e.g. the all-students roster) override
-// grid-template-columns on top of this, so the item styling stays shared.
-//
-// padding: 0 here (specificity 0,1,0) always beats Bootstrap reboot's plain
-// `ul { padding-left: 2rem; }` (0,0,1). But when .menu is used directly as
-// .mini-app-body (queue, attendance — a direct child of .mini-app-container),
-// it ties in specificity with .mini-app-container > *'s own padding-inline
-// rule in _miniapp.scss, so this file must be @import-ed *before* "miniapp"
-// in application.scss — the later rule wins the tie and re-applies the
-// container's inline padding on those direct-child menus, while nested menus
-// (inside a <nav>, see home/domains) are untouched by that rule and just
-// keep this reset.
+// Base navigation menu styles, with room for attached action buttons
+// to the right of the main button content.
 .menu {
     list-style: none;
     margin: 0;
@@ -21,52 +9,137 @@
     align-content: start;
     gap: 0.5rem;
 
-    li { margin: 0; }
-
-    a, button, form { display: block; width: 100%; }
-
-    a, button {
-        padding: 2rem;
-        border: none;
-        border-radius: 40px;
+    // A menu item is rounded and its content clipped to that shape. Any item
+    // can contain multiple parts next to each other (horizontally).
+    li {
+        display: flex;
+        flex-direction: row;
         background-color: #fff;
-        color: inherit;
-        text-align: left;
-        text-decoration: none;
-        transition: background-color 0.15s ease;
+        border-radius: 25px;
+        overflow: clip;
 
-        &:hover, &:focus-visible {
+        @supports (corner-shape: squircle) {
+            corner-shape: squircle;
+            border-radius: 40px;
+        }
+    }
+
+    // The contents of a menu item part are stacked vertically.
+    li > * {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+    }
+
+    // Main element grows as much as possible.
+    li > :first-child {
+        flex: 1 1 auto;
+    }
+
+    // Action buttons to the right of the item.
+    li > :first-child ~ * {
+        flex: 0 1 auto;
+        border-left: 1px solid #eee;
+    }
+
+    // Forms should act neutrally.
+    li > form {
+        display: flex;
+        width: auto;
+        > button {
+            flex: 1;
+            display: block;
+        }
+    }
+
+    // Buttons are the main content here, and most importantly have
+    // a big padding.
+    li > a,
+    li > button,
+    li > form > button {
+        @extend %button;
+        background-color: white;
+        align-items: start;
+        padding: 2rem;
+
+        &:hover,
+        &:focus-visible {
             background-color: #f8f9fa;
         }
     }
 
-    .menu-message {
-        padding: 2rem;
-        color: var(--bs-secondary-color);
+    li > *:first-child:has(> :nth-child(2)) {
+        padding: 1rem;
     }
 
-    // Currently-selected/claimed item (e.g. a queue request someone is
-    // helping with), replacing Bootstrap's .list-group-item.active.
+    // Action buttons get a bit less horizontal padding.
+    li > :first-child ~ a,
+    li > :first-child ~ button,
+    li > :first-child ~ form > button {
+        padding-inline: 1rem;
+    }
+
+    // The last action button pads a bit more towards the rounded circle.
+    li > :first-child ~ a:last-child,
+    li > :first-child ~ button:last-child,
+    li > :first-child ~ form:last-child > button {
+        padding-right: 1.25rem;
+    }
+
+    .list-item__title {
+        font-weight: 600;
+    }
+
+    .menu-message {
+        padding: 2rem;
+        color: $muted;
+    }
+
+    // Currently claimed item in student queue.
+    .menu-item--active,
     .menu-item--active {
         background-color: $primary;
         color: #fff;
 
-        &:hover, &:focus-visible {
-            background-color: $primary;
+        &:hover,
+        &:focus-visible {
+            background-color: darken($primary, 10%);
+        }
+    }
+
+    // Helpline request in student queue.
+    .menu-item--helpline,
+    .menu-item--helpline {
+        background-color: #fff3cd;
+
+        &:hover,
+        &:focus-visible {
+            background-color: #ffecb5;
         }
     }
 
     // Brief on-off-on-off highlight applied by the "menu" Stimulus controller
-    // just before a number-key shortcut follows through, mirroring macOS's
-    // menu blink. Hard cuts (paired keyframes at the same %) rather than a
-    // fade, so it reads as a blink and not a glow.
+    // just before a number-key shortcut follows through.
     .menu-item--flash {
         animation: menu-item-flash 200ms steps(1, end);
     }
 }
 
 @keyframes menu-item-flash {
-    0%, 33% { background-color: $primary; color: #fff; }
-    34%, 66% { background-color: #fff; color: inherit; }
-    67%, 100% { background-color: $primary; color: #fff; }
+    0%,
+    33% {
+        background-color: $primary;
+        color: #fff;
+    }
+    34%,
+    66% {
+        background-color: #fff;
+        color: inherit;
+    }
+    67%,
+    100% {
+        background-color: $primary;
+        color: #fff;
+    }
 }

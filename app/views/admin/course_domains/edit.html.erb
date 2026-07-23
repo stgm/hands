@@ -1,5 +1,4 @@
 <% content_for :title, "Edit #{@course_domain.name}" %>
-<% content_for :wide, false %>
 <% content_for :app_icon, "🏫" %>
 <% content_for :app_title, "Edit domain" %>
 <% content_for :app_subtitle, @course_domain.name %>
@@ -9,24 +8,24 @@
   <hr class="my-4">
 
   <h2 class="h6">Linking a course site</h2>
-  <p class="text-body-secondary small">
+  <p class="text-muted small">
     Configure a course-site with this domain's slug and link secret to embed the
     student widget. Any course-site holding the secret can create student tokens for
     this domain.
   </p>
-  <dl class="row small">
-    <dt class="col-sm-3">Domain slug</dt>
-    <dd class="col-sm-9"><code><%= @course_domain.slug %></code></dd>
-    <dt class="col-sm-3">Link secret</dt>
-    <dd class="col-sm-9"><code><%= @course_domain.link_secret %></code></dd>
-  </dl>
+  <table class="table small">
+    <tbody>
+      <tr><th scope="row">Domain slug</th><td><code><%= @course_domain.slug %></code></td></tr>
+      <tr><th scope="row">Link secret</th><td><code><%= @course_domain.link_secret %></code></td></tr>
+    </tbody>
+  </table>
   <%= button_to "Rotate link secret", rotate_secret_admin_course_domain_path(@course_domain),
-        method: :post, class: "btn btn-sm btn-outline-warning",
+        method: :post, class: "btn btn--outline-warning",
         data: { turbo_confirm: "Rotating breaks every linked course-site until they are reconfigured. Continue?" } %>
 
   <hr class="my-4">
 
   <%= button_to "Delete this course domain", admin_course_domain_path(@course_domain),
-        method: :delete, class: "btn btn-sm btn-outline-danger",
+        method: :delete, class: "btn btn--outline-danger",
         data: { turbo_confirm: "Delete #{@course_domain.name} and all its data?" } %>
 </div>

@@ -26,13 +26,13 @@
       <% if @course_domain.enrollment_open? %>
         <h5>You are not a member of<br><%= @course_domain.name %> yet.</h5>
       <% else %>
-        <h5>Enrollment is closed.<br><small class="text-body-secondary">Use the widget in your course site, or ask a teacher.</small></h5>
+        <h5>Enrollment is closed.<br><small class="text-muted">Use the widget in your course site, or ask a teacher.</small></h5>
       <% end %>
     </div>
   </div>
   <% if @course_domain.enrollment_open? %>
     <div class="mini-app-footer">
-      <%= button_to "Join #{@course_domain.name}", domain_join_path(@course_domain.slug), method: :post, class: "btn btn-primary w-100" %>
+      <%= button_to "Join #{@course_domain.name}", domain_join_path(@course_domain.slug), method: :post, class: "action primary" %>
     </div>
   <% end %>
 <% end %>

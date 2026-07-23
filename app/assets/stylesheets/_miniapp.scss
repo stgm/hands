@@ -62,16 +62,6 @@ body.mini-app {
     // is a safety net: it never scrolls, so the padding trick below only has
     // to be *generous*, not exact, to keep focus rings from looking cut off.
     overflow-x: clip;
-
-    // Bootstrap draws focus rings as a 0.25rem box-shadow *outside* the input
-    // box, and grid rows bleed past their container via negative margins
-    // (half their gutter, e.g. 0.75rem each side for `.g-4`). Give both room,
-    // then pull the content back into alignment.
-    /* margin-inline: -0.75rem; */
-
-    a.list-group-item, .list-group-item {
-        border-radius: 40px !important;
-    }
 }
 
 @media (max-width: 767px) {
@@ -144,21 +134,11 @@ body.mini-app {
             padding: 2rem;
         }
     }
-
-    // Data-heavy staff/admin pages (tables, rosters) need more room than the
-    // narrow phone-shaped card, while keeping the same framing.
-    .mini-app-container.wide {
-        width: 80%;
-        max-width: 64rem;
-        min-width: 30rem;
-    }
 }
 
-// Footer action buttons: plain `a`/`button`/`input[type=submit]` elements,
-// no Bootstrap .btn dependency, so the pill shape and color apply no matter
-// which tag a given footer view happens to render. Laid out in a single
-// horizontal row (grid-auto-flow: column) with equal-width columns: one
-// action fills the whole row, two share it evenly with a gap between.
+// Footer action buttons. Laid out in a single horizontal row with equal-width
+// columns: one action fills the whole row, two share it evenly with a gap
+// between.
 .mini-app-footer {
     flex-shrink: 0;
     display: grid;
@@ -176,19 +156,11 @@ body.mini-app {
     }
 
     .action {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        @extend %button;
+        @extend %rounded;
+
         width: 100%;
-        min-height: 2.5rem;
-        padding-inline: 1rem;
-        border: none;
-        border-radius: 3rem;
-        corner-shape: squircle;
-        background-color: $light;
-        color: $dark;
         font-weight: 500;
-        text-decoration: none;
 
         &.primary {
             background-color: $primary;

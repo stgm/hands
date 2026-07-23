@@ -1,6 +1,6 @@
 <%# Locals: hand, course_domain. Inner content of a queue list item. %>
 <% if hand.assist %>
-  <span class="float-end badge bg-secondary"><%= hand.assist.display_name %></span>
+  <span class="badge float-end"><%= hand.assist.display_name %></span>
 <% end %>
 <p>
   <% if hand.subject.present? %><strong><%= hand.subject %></strong>&mdash;<% end %><%= hand.help_question %>

@@ -40,11 +40,11 @@
       <%= button_to "Start helping",
       claim_domain_queue_hand_path(current_course_domain.slug, @hand),
       method: :put,
-      class: "btn btn-primary w-100 me-md-2" %>
+      class: "action primary" %>
       <%= button_to "Delete",
       done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
       method: :put,
-      class: "btn btn-secondary w-100",
+      class: "action",
       form: {
         data: {
           controller: "back-redirect",
@@ -55,7 +55,7 @@
       <%= button_to "Done",
       done_domain_queue_hand_path(current_course_domain.slug, @hand, success: true),
       method: :put,
-      class: "btn btn-primary w-100 me-md-2",
+      class: "action primary",
       form: {
         data: {
           controller: "back-redirect",
@@ -64,7 +64,7 @@
       <%= button_to "Put back",
       helpline_domain_queue_hand_path(current_course_domain.slug, @hand),
       method: :put,
-      class: "btn btn-secondary w-100 me-md-2",
+      class: "action",
       form: {
         data: {
           controller: "back-redirect",
@@ -74,7 +74,7 @@
       <%= button_to "Delete",
       done_domain_queue_hand_path(current_course_domain.slug, @hand, success: false),
       method: :put,
-      class: "btn btn-secondary w-100",
+      class: "action",
       form: {
         data: {
           controller: "back-redirect",

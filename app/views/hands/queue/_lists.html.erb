@@ -9,7 +9,7 @@
   <li>
     <%= link_to domain_queue_hand_path(course_domain.slug, hand),
           id: dom_id(hand),
-          class: "#{'menu-item--active' if hand.assist} #{'bg-warning' if hand.helpline?}" do %>
+          class: "#{'menu-item--active' if hand.assist} #{'menu-item--helpline' if hand.helpline?}" do %>
       <%= render "hands/queue/hand", hand: hand, course_domain: course_domain %>
     <% end %>
   </li>

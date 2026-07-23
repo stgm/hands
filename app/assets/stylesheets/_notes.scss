@@ -40,11 +40,10 @@
     }
 }
 
-// Each note is a plain .note-item (a direct child of .notes-list, no
-// Bootstrap list-group dependency — see _menu.scss for the same pattern)
-// containing an author label, a rounded "bubble" holding the note text, and
-// a timestamp below. The .note-item itself carries none of the bubble's
-// visual styling — the nested .note-bubble does.
+// Each note is a plain .note-item containing an author label, a rounded
+// "bubble" holding the note text, and a timestamp below. The .note-item
+// itself carries none of the bubble's visual styling — the nested
+// .note-bubble does.
 .notes-list {
     /* border-top: 1px solid #dee2e6; */
     list-style: none;
@@ -73,7 +72,7 @@
 
         &::before {
             content: "No notes yet.";
-            color: var(--bs-secondary-color);
+            color: $muted;
         }
     }
 
@@ -92,7 +91,7 @@
         font-size: x-small;
         padding-left: 20px;
         margin-bottom: 0.15rem;
-        color: var(--bs-secondary-color);
+        color: $muted;
     }
 
     .note-bubble {
@@ -107,7 +106,7 @@
         padding-right: 20px;
         margin-top: 0.15rem;
         text-align: right;
-        color: var(--bs-secondary-color);
+        color: $muted;
     }
 
     // Recent-notes page only: intersperses a student-name heading before each

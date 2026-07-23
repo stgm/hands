@@ -1,25 +1,71 @@
 nl:
-  hands:
-    assistance: Assistentie
-    request_assistance_in_class: "Zet jezelf hier in de rij voor een vraag:"
-    good_morning: "Goedemorgen"
-    good_afternoon: "Goedemiddag"
-    good_evening: "Goedenavond"
-    good_night: "Goedenavond"
-    lets_check_you_in: "Check jezelf in."
-    entering_location: "Geef je %{location_type}"
-    save_my_location: "Sla mijn locatie op"
-    summary: "Samenvatting"
-    location: "Locatie"
-    link: "Link"
-    briefly_summarize: "Geef aan wat je wil bespreken"
-    enter_location: "Vermeld je huidige %{type}"
-    enter_link: "Plak de link voor je videocall"
-    ask_for_assistance: "Vraag om assistentie"
-    posting_question: "Eén momentje..."
-    you_are_number_1_in_line: "Je bent nummer %{number} in de wachtrij."
-    wait_is_over: "Het wachten is voorbij!"
-    is_looking_to_help_you: "%{name} is op dit moment naar je op zoek om je te assisteren."
-    cancel_request: "Annuleren"
-    # link: "Geef je Zoom-link"
-    in_line: "Je staat even in de wacht omdat je kort geleden geholpen bent, en het is nogal druk!"
+    hands:
+        assistance: Assistentie
+        request_assistance_in_class: "Zet jezelf hier in de rij voor een vraag:"
+        good_morning: "Goedemorgen"
+        good_afternoon: "Goedemiddag"
+        good_evening: "Goedenavond"
+        good_night: "Goedenavond"
+        lets_check_you_in: "Check jezelf in."
+        entering_location: "Geef je %{location_type}"
+        save_my_location: "Sla mijn locatie op"
+        summary: "Samenvatting"
+        location: "Locatie"
+        link: "Link"
+        briefly_summarize: "Geef aan wat je wil bespreken"
+        enter_location: "Vermeld je huidige %{type}"
+        enter_link: "Plak de link voor je videocall"
+        ask_for_assistance: "Vraag om assistentie"
+        posting_question: "Eén momentje..."
+        you_are_number_1_in_line: "Je bent nummer %{number} in de wachtrij."
+        wait_is_over: "Het wachten is voorbij!"
+        is_looking_to_help_you: "%{name} is op dit moment naar je op zoek om je te assisteren."
+        cancel_request: "Annuleren"
+        # link: "Geef je Zoom-link"
+        in_line: "Je staat even in de wacht omdat je kort geleden geholpen bent, en het is nogal druk!"
+    datetime:
+        distance_in_words:
+            about_x_hours:
+                one: ongeveer een uur
+                other: "zo'n %{count} uur"
+            about_x_months:
+                one: ongeveer een maand
+                other: "zo'n %{count} maanden"
+            about_x_years:
+                one: ongeveer een jaar
+                other: "iets van %{count} jaar"
+            almost_x_years:
+                one: bijna een jaar
+                other: bijna %{count} jaar
+            half_a_minute: een halve minuut
+            less_than_x_minutes:
+                one: nog geen minuut
+                other: nog geen %{count} minuten
+            less_than_x_seconds:
+                one: nog geen seconde
+                other: nog geen %{count} seconden
+            over_x_years:
+                one: meer dan een jaar
+                other: meer dan %{count} jaar
+            x_days:
+                one: 1 dag
+                other: "%{count} dagen"
+            x_minutes:
+                one: 1 minuut
+                other: "%{count} minuten"
+            x_months:
+                one: 1 maand
+                other: "%{count} maanden"
+            x_years:
+                one: 1 jaar
+                other: "%{count} jaar"
+            x_seconds:
+                one: 1 seconde
+                other: "%{count} seconden"
+        prompts:
+            day: dag
+            hour: uur
+            minute: minuut
+            month: maand
+            second: seconde
+            year: jaar

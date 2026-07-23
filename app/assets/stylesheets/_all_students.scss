@@ -35,7 +35,7 @@
 
 .student-card__detail {
     font-size: 0.875em;
-    color: var(--bs-secondary-color);
+    color: $muted;
 }
 
 .student-card__source {
@@ -60,13 +60,13 @@
 // empty state when the list contains no students to begin with
 .attendance-grid:not(:has(li))::before {
     content: "No students in this course yet.";
-    color: var(--bs-secondary-color);
+    color: $muted;
 }
 
 // empty state when all students have been filtered out
 .attendance-grid:has(li):not(:has(li:not([hidden])))::before {
     content: "No students match that filter.";
-    color: var(--bs-secondary-color);
+    color: $muted;
 }
 
 .status-dot {

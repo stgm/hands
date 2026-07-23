@@ -1,11 +1,11 @@
 <div class="mini-app-body hands-app">
   <h2 class="h5 mb-3">Sign in by email</h2>
-  <p class="text-body-secondary">We'll email you a one-time code.</p>
+  <p class="text-muted">We'll email you a one-time code.</p>
 
   <%= form_with url: auth_mail_create_path, method: :post, id: "login_form" do |f| %>
     <div class="mb-3">
-      <%= f.label :email, "Email address", class: "form-label" %>
-      <%= f.email_field :email, required: true, autofocus: true, class: "form-control", autocomplete: "email" %>
+      <%= f.label :email, "Email address" %>
+      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email" %>
     </div>
   <% end %>
 
@@ -13,7 +13,7 @@
     <hr class="my-4">
     <%# Auth can't go through turbo %>
     <%= link_to "Sign in with institutional account", auth_open_login_path,
-        class: "btn btn-outline-secondary w-100", data: { turbo: "false" } %>
+        class: "btn btn--outline", data: { turbo: "false" } %>
   <% end %>
 </div>
 

@@ -4,11 +4,11 @@
 <% content_for :app_subtitle, current_course_domain.name %>
 
 <%= form_with url: domain_availability_path(current_course_domain.slug), method: :patch, class: "mini-app-body" do |f| %>
-  <p class="text-body-secondary">Assistants must be available to see the queue. Teachers and admins always can.</p>
+  <p class="text-muted">Assistants must be available to see the queue. Teachers and admins always can.</p>
   <ul class="menu" role="list" data-controller="menu">
     <% [30, 60, 120, 240].each do |m| %>
       <li><%= f.button "#{m} min", name: "minutes", value: m %></li>
     <% end %>
-    <li><%= f.button "I'm done for today", name: "minutes", value: 0, class: "text-body-secondary" %></li>
+    <li><%= f.button "I'm done for today", name: "minutes", value: 0, class: "text-muted" %></li>
   </ul>
 <% end %>

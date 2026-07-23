@@ -1,5 +1,5 @@
-/* Student-facing hands widget — ported from course-site's assistance.scss, made
-   self-contained (no Bootstrap) so it renders identically inside a Shadow DOM on
+/* Student-facing hands widget — ported from course-site's assistance.scss,
+   self-contained so it renders identically inside a Shadow DOM on
    any host page. Everything is scoped under .hands-widget. */
 
 .hands-widget {
@@ -21,6 +21,10 @@
 .hands-widget img { margin-bottom: 0.5rem; }
 
 .hands-widget .cards { display: block; }
+
+.hands-widget #assistance-form > * {
+  width: 100%;
+}
 
 /* Labels: the bold heading is hidden in the compact popup (as in the original),
    leaving just the small instruction line. */

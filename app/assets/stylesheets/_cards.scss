@@ -141,15 +141,6 @@
         h5 { margin-top: -4rem; text-align: center; }
     }
 
-    .list-group-item {
-        padding: 2rem;
-        border: 0 !important;
-
-        &:not(:last-child) {
-            margin-bottom: 0.5rem;
-        }
-    }
-
     &.home-page .home-hero {
         flex: 1 1 auto;
         display: flex;

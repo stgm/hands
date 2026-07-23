@@ -41,9 +41,8 @@ gem "image_processing", "~> 1.2"
 
 # --- hands app additions (mirroring course-site conventions) ---
 
-# front-end: Bootstrap SCSS compiled by dart-sass (no Node), matching course-site
+# front-end: SCSS compiled by dart-sass (no Node), matching course-site
 gem "dartsass-rails"
-gem "bootstrap", "~> 5.3.3"
 
 # slug generator for course-domain routing
 gem "friendly_id"

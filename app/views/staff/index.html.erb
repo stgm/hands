@@ -1,59 +1,49 @@
 <% content_for :title, "Staff — #{current_course_domain.name}" %>
-<% content_for :wide, true %>
 <% content_for :app_icon, "👥" %>
 <% content_for :app_title, "Staff" %>
 <% content_for :app_subtitle, "#{current_course_domain.name} — #{@student_count} students enrolled" %>
 
 <div class="mini-app-body hands-app">
-  <div class="row g-4">
-    <div class="col-12 col-lg-7">
-      <h2 class="h6">Team</h2>
-      <table class="table align-middle">
-        <tbody>
-          <% @staff.each do |member| %>
-            <tr>
-              <td>
-                <%= member.display_name %>
-                <div class="small text-body-secondary"><%= member.user.email %></div>
-              </td>
-              <td>
-                <%= form_with url: domain_staff_member_path(current_course_domain.slug, member), method: :patch, class: "d-inline" do |f| %>
-                  <%= f.select :role, Membership.roles.keys.map { |r| [r.capitalize, r] }, { selected: member.role }, class: "form-select form-select-sm d-inline w-auto", onchange: "this.form.requestSubmit()" %>
-                <% end %>
-              </td>
-              <td class="text-end">
-                <%= button_to "Remove", domain_staff_member_path(current_course_domain.slug, member), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Remove #{member.display_name}?" } } %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="col-12 col-lg-5">
-      <h2 class="h6">Invite staff</h2>
-      <%= form_with url: domain_staff_invitations_path(current_course_domain.slug), method: :post do |f| %>
-        <div class="mb-2">
-          <%= f.email_field :email, required: true, placeholder: "email@example.org", class: "form-control form-control-sm" %>
-        </div>
-        <div class="mb-2">
-          <%= f.select :role, Invitation.roles.keys.map { |r| [r.capitalize, r] }, {}, class: "form-select form-select-sm" %>
-        </div>
-        <%= f.submit "Send invitation", class: "btn btn-primary btn-sm" %>
+  <h2 class="h6">Team</h2>
+  <ul class="menu">
+      <% @staff.each do |member| %>
+        <li>
+          <div>
+            <%= member.display_name %>
+            <div class="small text-muted"><%= member.user.email %></div>
+            <%= form_with url: domain_staff_member_path(current_course_domain.slug, member), method: :patch do |f| %>
+              <%= f.select :role, Membership.roles.keys.map { |r| [r.capitalize, r] }, { selected: member.role }, onchange: "this.form.requestSubmit()" %>
+            <% end %>
+          </div>
+          <%= button_to "Remove", domain_staff_member_path(current_course_domain.slug, member), method: :delete, class: "btn--outline-danger", form: { data: { turbo_confirm: "Remove #{member.display_name}?" } } %>
+        </li>
       <% end %>
+  </ul>
 
-      <% if @pending.any? %>
-        <h3 class="h6 mt-4">Pending</h3>
-        <ul class="list-group">
-          <% @pending.each do |invitation| %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <span><%= invitation.email %> <span class="badge bg-secondary"><%= invitation.role %></span></span>
-              <%= button_to "Cancel", domain_staff_invitation_path(current_course_domain.slug, invitation), method: :delete, class: "btn btn-sm btn-link text-danger",
-                    form: { data: { turbo_confirm: "Cancel the invitation to #{invitation.email}?" } } %>
-            </li>
-          <% end %>
-        </ul>
-      <% end %>
+  <h2 class="h6 mt-4">Invite staff</h2>
+  <%= form_with url: domain_staff_invitations_path(current_course_domain.slug), method: :post do |f| %>
+    <div class="mb-2">
+      <%= f.email_field :email, required: true, placeholder: "email@example.org" %>
     </div>
-  </div>
+    <div class="mb-2">
+      <%= f.select :role, Invitation.roles.keys.map { |r| [r.capitalize, r] } %>
+    </div>
+    <%= f.submit "Send invitation", class: "btn btn--primary" %>
+  <% end %>
+
+  <% if @pending.any? %>
+    <h3 class="h6 mt-4">Pending</h3>
+    <ul class="menu">
+      <% @pending.each do |invitation| %>
+        <li>
+          <div>
+            <span><%= invitation.email %></span>
+            <span class="badge"><%= invitation.role %></span>
+          </div>
+          <%= button_to "Cancel", domain_staff_invitation_path(current_course_domain.slug, invitation), method: :delete, class: "btn btn--danger-text",
+                form: { data: { turbo_confirm: "Cancel the invitation to #{invitation.email}?" } } %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>

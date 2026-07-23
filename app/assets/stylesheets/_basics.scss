@@ -1,10 +1,244 @@
-// Real, clickable buttons get a pill shape everywhere in the app.
-.btn:not(trix-toolbar .btn), button:not(trix-toolbar button) {
-    border-radius: 3rem !important;
-    corner-shape: squircle;
+// Include padding in 100% sizes
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    // Remove default page margins around core element
+    margin: 0;
+    // Set sans font
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+// Inherit font properties everywhere, for a consistent look
+button, input, optgroup, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+// Default button style
+%button, button:not(trix-toolbar button):not(.menu button), input[type=submit] {
+    background-color: $light;
+
+    color: inherit;
+    text-decoration: none;
+
+    border: none;
     min-height: 2.5rem;
-    padding-inline: 2rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    &[hidden] {
+        display: none;
+    }
 }
+
+// Default rounding style
+%rounded, button:not(trix-toolbar button):not(.menu button), input[type=submit] {
+    border-radius: 0.75rem;
+    padding-inline: 1rem;
+
+    @supports (corner-shape: squircle) {
+        corner-shape: squircle;
+        border-radius: 3rem;
+    }
+}
+
+// Default header styles
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+// Default label behaviour
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+// Basic form field styling.
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=number],
+textarea,
+select {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+
+    &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+    }
+}
+
+textarea { min-height: 4rem; }
+
+input[type=checkbox], input[type=radio] {
+    width: auto;
+}
+
+// Checkbox/radio + label on one row.
+.field-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    label { margin-bottom: 0; }
+}
+
+// A bordered box grouping related fields.
+.field-group {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+// Small helper text below a field.
+.hint {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: $muted;
+}
+
+// Minimal set of layout/text helpers actually used across the app.
+.text-muted { color: $muted; }
+.text-center { text-align: center; }
+.float-end { float: right; }
+.small { font-size: 0.875em; }
+.fs-5 { font-size: 1.25rem; }
+
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.my-4 { margin-block: 1.5rem; }
+
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    border-radius: 0.375rem;
+    background-color: $muted;
+    color: #fff;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.alert--danger {
+    background-color: rgba($danger, 0.1);
+    border-color: rgba($danger, 0.3);
+    color: #a12a20;
+}
+
+.alert--success {
+    background-color: rgba(#2FAE55, 0.1);
+    border-color: rgba(#2FAE55, 0.3);
+    color: #1f7a3d;
+}
+
+.alert-dismiss {
+    background: none;
+    border: none;
+    padding: 0;
+    min-height: auto;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.6;
+
+    &:hover { opacity: 1; }
+}
+
+// Table styling.
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 0.5rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    // Inline per-row forms (e.g. a role <select> that submits on change)
+    // shouldn't force their own block row inside a table cell.
+    form { display: inline; }
+    select { width: auto; }
+}
+
+// Generic button/link look.
+.btn {
+    border: 1px solid transparent;
+    background-color: #e9ecef;
+    color: #212529;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover { filter: brightness(0.96); }
+}
+
+.btn--primary {
+    background-color: $primary;
+    border-color: $primary;
+    color: #fff;
+}
+
+.btn--outline {
+    background-color: transparent;
+    border-color: $secondary;
+    color: $secondary;
+
+    &:hover { background-color: rgba($secondary, 0.1); }
+}
+
+.btn--outline-warning {
+    background-color: transparent;
+    border-color: #ffc107;
+    color: #ab7500;
+
+    &:hover { background-color: rgba(255, 193, 7, 0.1); }
+}
+
+.btn--outline-danger {
+    background-color: transparent;
+    border-color: $danger;
+    color: $danger;
+
+    &:hover { background-color: rgba($danger, 0.1); }
+}
+
+.btn--danger-text { color: $danger; }
