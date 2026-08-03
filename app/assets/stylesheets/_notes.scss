@@ -6,7 +6,7 @@
 }
 
 .add-note-form trix-editor {
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 // Student notes page laid out like a chat: the page body itself is the
@@ -72,7 +72,7 @@
 
         &::before {
             content: "No notes yet.";
-            color: $muted;
+            color: var(--muted);
         }
     }
 
@@ -91,12 +91,12 @@
         font-size: x-small;
         padding-left: 20px;
         margin-bottom: 0.15rem;
-        color: $muted;
+        color: var(--muted);
     }
 
     .note-bubble {
         display: inline-block;
-        background-color: #fff;
+        background-color: var(--white);
         border-radius: 20px;
         padding: 1rem;
     }
@@ -106,7 +106,7 @@
         padding-right: 20px;
         margin-top: 0.15rem;
         text-align: right;
-        color: $muted;
+        color: var(--muted);
     }
 
     // Recent-notes page only: intersperses a student-name heading before each
@@ -134,8 +134,8 @@
 }
 
 .note-toggle-btn {
-    background-color: $primary;
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
 }
 

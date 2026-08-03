@@ -2,8 +2,10 @@
 // the full content is framed visually so it doesn't look weird.
 // Ported from course-site's includes/miniapp.scss.
 
+@use "basics";
+
 body.mini-app {
-    background: linear-gradient(180deg, #E3F1FF, #FFFBE2) fixed;
+    background: linear-gradient(180deg, var(--app-gradient-blue), var(--app-gradient-yellow)) fixed;
     // Must be a definite height, not min-height: the "main" grid row is 1fr
     // and .mini-app-container sizes itself with percentage heights against
     // it, both of which resolve to auto (i.e. grow with content, breaking
@@ -36,7 +38,7 @@ body.mini-app {
     grid-template-columns: 3rem 1fr;
     column-gap: 0.5rem;
 
-    .icon, svg { grid-area: a; font-size: 2rem; line-height: 1; }
+    .icon, svg { grid-area: a; font-size: 2rem; line-height: 1; text-decoration: none; }
     h1 { grid-area: b; font-size: 2rem; margin-top: -0.25ex; }
     h3 { grid-area: c; font-size: 1rem; }
 
@@ -106,12 +108,12 @@ body.mini-app {
         width: 33%;
         min-width: 30rem;
 
-        border: 1px solid #eff;
+        border: 1px solid var(--card-border-light);
         border-radius: 40px;
         corner-shape: squircle;
 
-        background: linear-gradient(180deg, #E3F1FF, #FFFBE2) fixed !important;
-        box-shadow: 0px 10px 40px 9px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(180deg, var(--app-gradient-blue), var(--app-gradient-yellow)) fixed !important;
+        box-shadow: 0px 10px 40px 9px rgba(var(--black-rgb), 0.1);
 
         overflow: hidden;
 
@@ -163,13 +165,13 @@ body.mini-app {
         font-weight: 500;
 
         &.primary {
-            background-color: $primary;
-            color: #fff;
+            background-color: var(--primary);
+            color: var(--white);
         }
 
         &.danger {
-            background-color: $danger;
-            color: #fff;
+            background-color: var(--danger);
+            color: var(--white);
         }
     }
 }

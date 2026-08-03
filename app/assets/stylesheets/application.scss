@@ -1,26 +1,72 @@
-// Brand palette, ported from course-site's application.scss so buttons,
-// links, etc. match
-$primary: #0087d9;
-$secondary: #71B1D9;
-$danger: #ff4136;
-$light: #B6CBD9;
-$dark: adjust-color(#0074d9, $lightness: -10%);
-$muted: #6c757d;
-
 // Default Trix/Action Text editor styles.
-@import "actiontext";
+@use "actiontext";
 
 // App-wide basics (button shapes, headings, etc.) not specific to any one view.
-@import "basics";
+@use "basics";
 
 // Imported before "miniapp" so its .mini-app-container > * padding-inline
 // rule (equal specificity to .menu's own padding reset) wins the cascade
 // tie when a .menu is used directly as .mini-app-body — see the comment atop
 // _menu.scss for the full explanation.
-@import "menu";
+@use "menu";
 
 // The "mini app" shell: full-screen on phones, a framed card on desktop.
-@import "miniapp";
-@import "cards";
-@import "all_students";
-@import "notes";
+@use "miniapp";
+@use "cards";
+@use "all_students";
+@use "notes";
+
+// Brand palette, ported from course-site's application.scss so buttons,
+// links, etc. match
+:root {
+    // Brand palette
+    --primary: #0087d9;
+    --primary-rgb: 0, 135, 217;
+    --secondary: #71b1d9;
+    --secondary-rgb: 113, 177, 217;
+    --danger: #ff4136;
+    --danger-rgb: 255, 65, 54;
+    --light: #b6cbd9;
+    --muted: #6c757d;
+
+    // Status colors
+    --success: #2fae55;
+    --success-rgb: 47, 174, 85;
+    --success-bg-light: #eafbef;
+    --success-border-light: #8fd9a3;
+    --success-text: #1f7a3d;
+    --warning: #ffc107;
+    --warning-rgb: 255, 193, 7;
+    --warning-text: #ab7500;
+    --danger-text: #a12a20;
+
+    // Neutrals
+    --white: #fff;
+    --white-rgb: 255, 255, 255;
+    --black: #000;
+    --black-rgb: 0, 0, 0;
+    --text-dark: #212529;
+    --border-light: #eee;
+    --border-muted: #ccc;
+    --control-border: #ced4da;
+    --bg-informational: #f8f9fa;
+    --bg-hover: #f8f9fa;
+    --btn-bg: #e9ecef;
+
+    // Check-in card ("location" form highlight)
+    --checkin-bg-rgb: 255, 206, 0;
+
+    // Mobile card gradients (_cards.scss)
+    --card-gradient-blue: #caeaff;
+    --card-gradient-green: #baf7c8;
+    --card-gradient-lightblue: #e2f4ff;
+
+    // Mini-app background gradient (_miniapp.scss)
+    --app-gradient-blue: #e3f1ff;
+    --app-gradient-yellow: #fffbe2;
+    --card-border-light: #eff;
+
+    // Queue menu "helpline" highlight (_menu.scss)
+    --helpline-bg: #fff3cd;
+    --helpline-bg-hover: #ffecb5;
+}

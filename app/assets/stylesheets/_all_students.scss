@@ -15,8 +15,8 @@
 }
 
 .student-card--present {
-    background-color: #EAFBEF;
-    border-color: #8FD9A3;
+    background-color: var(--success-bg-light);
+    border-color: var(--success-border-light);
 }
 
 .student-card__header {
@@ -35,7 +35,7 @@
 
 .student-card__detail {
     font-size: 0.875em;
-    color: $muted;
+    color: var(--muted);
 }
 
 .student-card__source {
@@ -45,8 +45,8 @@
     font-weight: 600;
     line-height: 1;
     border-radius: 0.25rem;
-    background-color: #f8f9fa;
-    color: #212529;
+    background-color: var(--bg-informational);
+    color: var(--text-dark);
 }
 
 // empty states
@@ -60,13 +60,13 @@
 // empty state when the list contains no students to begin with
 .attendance-grid:not(:has(li))::before {
     content: "No students in this course yet.";
-    color: $muted;
+    color: var(--muted);
 }
 
 // empty state when all students have been filtered out
 .attendance-grid:has(li):not(:has(li:not([hidden])))::before {
     content: "No students match that filter.";
-    color: $muted;
+    color: var(--muted);
 }
 
 .status-dot {
@@ -79,10 +79,10 @@
 }
 
 .status-dot--present {
-    background-color: #2FAE55;
-    box-shadow: 0 0 0 3px rgba(47, 174, 85, 0.2);
+    background-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(var(--success-rgb), 0.2);
 }
 
 .status-dot--away {
-    background-color: #ccc;
+    background-color: var(--border-muted);
 }

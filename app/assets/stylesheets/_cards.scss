@@ -30,9 +30,9 @@
     }
 
     .cards .btn {
-        color: #000;
-        background-color: #ffc107;
-        border-color: #ffc107;
+        color: var(--black);
+        background-color: var(--warning);
+        border-color: var(--warning);
         font-weight: bolder;
     }
 
@@ -45,7 +45,7 @@
     // Check-in ("location") view — a yellow rounded box with a big dotted field.
     #location-form {
         justify-content: space-between;
-        background-color: rgba(255, 206, 0, 0.6);
+        background-color: rgba(var(--checkin-bg-rgb), 0.6);
         border-radius: 30px;
         padding: 1.5rem;
 
@@ -74,7 +74,7 @@
             width: 100%;
             border: none;
             margin-bottom: 1rem;
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(var(--white-rgb), 0.6);
         }
     }
 
@@ -101,12 +101,12 @@
 
         .cards > div, .cards > form {
             border-radius: 40px;
-            background: linear-gradient(170deg, #CAEAFF, #BAF7C8) fixed !important;
+            background: linear-gradient(170deg, var(--card-gradient-blue), var(--card-gradient-green)) fixed !important;
             padding: 1.5rem;
         }
 
         .cards > :first-child {
-            background: linear-gradient(180deg, #CAEAFF, #E2F4FF) fixed !important;
+            background: linear-gradient(180deg, var(--card-gradient-blue), var(--card-gradient-lightblue)) fixed !important;
         }
 
         .cards > :nth-child(2) { margin-top: -0.25rem; }
@@ -168,7 +168,7 @@
 
     @media (max-width: 767px) {
         .hands-show {
-            background: linear-gradient(170deg, #CAEAFF, #BAF7C8) fixed !important;
+            background: linear-gradient(170deg, var(--card-gradient-blue), var(--card-gradient-green)) fixed !important;
             border-radius: 40px;
             height: 100%;
             padding: 2rem;
