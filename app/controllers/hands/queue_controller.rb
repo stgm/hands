@@ -33,7 +33,8 @@ class Hands::QueueController < ApplicationController
         @hand.close!(
             success: ActiveModel::Type::Boolean.new.cast(params[:success]),
             evaluation: params[:evaluation],
-            note: params[:note]
+            note: params[:note],
+            closed_by: staff_membership!
         )
         redirect_to domain_queue_hands_path(current_course_domain.slug)
     end

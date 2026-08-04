@@ -19,7 +19,7 @@
       <p>
         <% if @hand.done? %>
           Closed by
-          <%= staff_name(@hand.assist) %>
+          <%= staff_name(@hand.closed_by || @hand.assist) %>
           at
           <%= @hand.closed_at %>
         <% elsif @hand.assist %>

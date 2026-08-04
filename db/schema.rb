@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_20_124113) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_120000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -68,6 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_20_124113) do
     t.bigint "assist_membership_id"
     t.datetime "claimed_at"
     t.datetime "closed_at"
+    t.bigint "closed_by_membership_id"
     t.integer "course_domain_id", null: false
     t.datetime "created_at", null: false
     t.boolean "done", default: false, null: false
@@ -82,6 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_20_124113) do
     t.boolean "success", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["assist_membership_id"], name: "index_hands_on_assist_membership_id"
+    t.index ["closed_by_membership_id"], name: "index_hands_on_closed_by_membership_id"
     t.index ["course_domain_id", "done"], name: "index_hands_on_course_domain_id_and_done"
     t.index ["course_domain_id"], name: "index_hands_on_course_domain_id"
     t.index ["membership_id"], name: "index_hands_on_membership_id"
@@ -314,6 +316,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_20_124113) do
   add_foreign_key "hands", "course_domains"
   add_foreign_key "hands", "memberships"
   add_foreign_key "hands", "memberships", column: "assist_membership_id"
+  add_foreign_key "hands", "memberships", column: "closed_by_membership_id"
   add_foreign_key "invitations", "course_domains"
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "memberships", "course_domains"

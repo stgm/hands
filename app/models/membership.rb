@@ -5,6 +5,7 @@ class Membership < ApplicationRecord
 
     has_many :hands, dependent: :destroy
     has_many :claimed_hands, class_name: "Hand", foreign_key: :assist_membership_id, dependent: :nullify
+    has_many :closed_hands, class_name: "Hand", foreign_key: :closed_by_membership_id, dependent: :nullify
     has_many :notes, dependent: :destroy                     # notes about this student
     has_many :authored_notes, class_name: "Note", foreign_key: :author_membership_id, dependent: :nullify
     has_many :presences, dependent: :destroy

@@ -3,6 +3,8 @@ class Hand < ApplicationRecord
     belongs_to :membership                                   # the student asking
     belongs_to :assist, class_name: "Membership",            # the staff helping
         foreign_key: :assist_membership_id, optional: true
+    belongs_to :closed_by, class_name: "Membership",         # the staff member who closed it
+        foreign_key: :closed_by_membership_id, optional: true
 
     has_one :user, through: :membership
 
@@ -31,8 +33,8 @@ class Hand < ApplicationRecord
         update(assist_membership_id: nil, claimed_at: nil)
     end
 
-    def close!(success:, evaluation: nil, note: nil)
-        update(done: true, success: success, evaluation: evaluation, note: note, closed_at: Time.current)
+    def close!(success:, evaluation: nil, note: nil, closed_by: nil)
+        update(done: true, success: success, evaluation: evaluation, note: note, closed_at: Time.current, closed_by: closed_by || assist)
     end
 
     def cancel!
