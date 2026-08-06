@@ -27,7 +27,7 @@ class NotesAndAttendanceTest < ActionDispatch::IntegrationTest
         end
         assert_redirected_to domain_student_notes_path(@domain.slug, memberships(:student_algorithms).id)
         follow_redirect!
-        assert_select ".alert-danger", /can.t be blank/
+        assert_select ".alert--danger", /can.t be blank/
     end
 
     test "students may not access notes" do
