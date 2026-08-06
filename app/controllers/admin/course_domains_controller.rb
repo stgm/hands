@@ -46,7 +46,6 @@ class Admin::CourseDomainsController < Admin::BaseController
     end
 
     def course_domain_params
-        params.require(:course_domain).permit(:name, :enrollment_open, :location_type, :locale,
-            :ask_location, :location_bumper, :link_mode)
+        params.require(:course_domain).permit(*CourseDomain::SETTABLE_ATTRIBUTES)
     end
 end

@@ -17,6 +17,9 @@
         <% if acting_senior? %>
           <li><%= link_to "Manage staff", domain_staff_path(@course_domain.slug) %></li>
         <% end %>
+        <% if @course_domain.managed_by?(current_user) %>
+          <li><%= link_to "Course settings", edit_course_path(@course_domain) %></li>
+        <% end %>
       <% end %>
     </ul>
   </nav>

@@ -6,6 +6,13 @@ class CourseDomain < ApplicationRecord
     # this domain. Rotatable; possession of it authorizes creating student tokens.
     has_secure_token :link_secret, length: 36
 
+    # Attributes a teacher or admin may set through a course settings form.
+    SETTABLE_ATTRIBUTES = [ :name, :enrollment_open, :location_type, :locale,
+        :ask_location, :location_bumper, :link_mode ].freeze
+
+    belongs_to :created_by, class_name: "User", optional: true,
+        inverse_of: :created_course_domains
+
     has_many :memberships, dependent: :destroy
     has_many :users, through: :memberships
     has_many :hands, dependent: :destroy
@@ -15,6 +22,11 @@ class CourseDomain < ApplicationRecord
 
     validates :name, presence: true
     validates :slug, presence: true, uniqueness: true
+
+    # Site admins manage every course; a teacher manages the one they created.
+    def managed_by?(user)
+        user.admin? || (created_by_id.present? && created_by_id == user.id)
+    end
 
     def rotate_link_secret!
         regenerate_link_secret

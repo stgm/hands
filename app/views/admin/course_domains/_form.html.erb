@@ -1,4 +1,10 @@
-<%= form_with model: @course_domain, url: form_url do |f| %>
+<%# `compact` asks only for the three things a teacher has to decide up front;
+    the rest keeps its default (enrollment is open) and can be changed from the
+    course settings afterwards. %>
+<% compact = local_assigns.fetch(:compact, false) %>
+<%# The submit button lives in the mini-app footer and reaches the form by id,
+    the same way the sign-in form does. %>
+<%= form_with model: @course_domain, url: form_url, id: "course_domain_form" do |f| %>
   <% if @course_domain.errors.any? %>
     <div class="alert alert--danger"><%= @course_domain.errors.full_messages.to_sentence %></div>
   <% end %>
@@ -7,34 +13,34 @@
     <%= f.text_field :name, required: true %>
   </div>
   <div class="mb-3">
-    <%= f.label :location_type, "Location label (e.g. table, room)" %>
+    <%= f.label :location_type, "Location label (e.g. room number, group)" %>
     <%= f.text_field :location_type %>
+    <div class="hint">We ask students for a location. If you have multiple groups at the same time, your could ask for a room number. But if it makes sense, you could ask students to enter their group number.</div>
   </div>
   <div class="mb-3">
     <%= f.label :locale, "Language" %>
     <%= f.select :locale, I18n.available_locales.map { |l| [ l.to_s.upcase, l ] } %>
-    <div class="hint">Used for the standalone widget. A linked course-site hands over its own language for the embedded widget.</div>
   </div>
-  <div class="field-check">
-    <%= f.check_box :enrollment_open %>
-    <%= f.label :enrollment_open, "Allow students to self-join via the domain link" %>
-  </div>
+  <% unless compact %>
+    <div class="field-check">
+      <%= f.check_box :enrollment_open %>
+      <%= f.label :enrollment_open, "Allow students to self-join via the domain link" %>
+    </div>
 
-  <fieldset class="field-group">
-    <legend class="h6">Student widget</legend>
-    <div class="field-check">
-      <%= f.check_box :ask_location %>
-      <%= f.label :ask_location, "Ask for a location when raising a hand" %>
-    </div>
-    <div class="field-check">
-      <%= f.check_box :location_bumper %>
-      <%= f.label :location_bumper, "Check students in (ask location before anything else)" %>
-    </div>
-    <div class="field-check">
-      <%= f.check_box :link_mode %>
-      <%= f.label :link_mode, "Ask for a Zoom link instead of a physical location" %>
-    </div>
-  </fieldset>
-
-  <%= f.submit class: "btn btn--primary" %>
+    <fieldset class="field-group">
+      <legend class="h6">Student widget</legend>
+      <div class="field-check">
+        <%= f.check_box :ask_location %>
+        <%= f.label :ask_location, "Ask for a location when raising a hand" %>
+      </div>
+      <div class="field-check">
+        <%= f.check_box :location_bumper %>
+        <%= f.label :location_bumper, "Check students in (ask location before anything else)" %>
+      </div>
+      <div class="field-check">
+        <%= f.check_box :link_mode %>
+        <%= f.label :link_mode, "Ask for a Zoom link instead of a physical location" %>
+      </div>
+    </fieldset>
+  <% end %>
 <% end %>

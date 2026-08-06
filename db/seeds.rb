@@ -15,7 +15,7 @@ student1 = User.find_or_create_by!(email: "student1@example.com") { |u| u.name =
 student2 = User.find_or_create_by!(email: "student2@example.com") { |u| u.name = "Cor Student"; u.student_number = "12345678" }
 student3 = User.find_or_create_by!(email: "student3@example.com") { |u| u.name = "Dor Student"; u.student_number = "12345678" }
 ta      = User.find_or_create_by!(email: "ta@example.com") { |u| u.name = "Tanya TA" }
-teacher = User.find_or_create_by!(email: "teacher@example.com") { |u| u.name = "Terry Teacher" }
+teacher = User.find_or_create_by!(email: "teacher@uva.nl") { |u| u.name = "Terry Teacher" }
 
 domain.memberships.find_or_create_by!(user: student) { |m| m.role = :student }
 domain.memberships.find_or_create_by!(user: student1) { |m| m.role = :student }

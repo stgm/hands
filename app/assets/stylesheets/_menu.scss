@@ -93,9 +93,31 @@
         font-weight: 600;
     }
 
-    .menu-message {
-        padding: 2rem;
-        color: var(--muted);
+    // Empty menu state: shown via generated content instead of DOM markup,
+    // same technique as the empty queue state in _cards.scss.
+    &.menu--courses:not(:has(li)) {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        &::before {
+            max-width: 16rem;
+            color: var(--muted);
+        }
+
+        &.menu--courses-student::before {
+            content: "You are not a member of any course yet. To register, use the link provided by your teacher.";
+        }
+
+        &.menu--courses-creator::before {
+            content: "You are not a member of any course yet. You can create an account for your own course using the button below.";
+        }
+
+        &.menu--courses-admin::before {
+            content: "You are not a member of any course yet. Use the button below to manage domains.";
+        }
     }
 
     // Currently claimed item in student queue.

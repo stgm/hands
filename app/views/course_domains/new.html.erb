@@ -1,0 +1,11 @@
+<% content_for :title, "New course" %>
+<% content_for :app_icon, "🏫" %>
+<% content_for :app_title, "New course" %>
+<% content_for :app_subtitle, "Owned by you" %>
+<div class="mini-app-body hands-app">
+  <%= render "admin/course_domains/form", form_url: courses_path, compact: true %>
+</div>
+
+<div class="mini-app-footer">
+  <%= submit_tag "Create course", class: "action primary", form: "course_domain_form" %>
+</div>

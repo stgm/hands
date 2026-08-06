@@ -42,6 +42,12 @@ Rails.application.routes.draw do
     # Health check for load balancers / uptime monitors.
     get "up" => "rails/health#show", as: :rails_health_check
 
+    # --- Course creation and settings for teachers (must stay above the greedy
+    # :course_domain_slug scope below) ---
+    resources :courses, only: [ :new, :create, :edit, :update ], controller: "course_domains" do
+        member { post :rotate_secret }
+    end
+
     # --- Course-domain scoped UI (must stay LAST: the :slug segment is greedy) ---
     # Standalone access at /<slug> for students, TAs, teachers and admins.
     scope path: ":course_domain_slug", as: :domain do

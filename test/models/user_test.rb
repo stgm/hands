@@ -27,7 +27,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     test "authenticate finds an existing user and refreshes profile fields" do
-        found = User.authenticate(email: "STUDENT@example.com", name: "Sam Renamed")
+        found = User.authenticate(email: "STUDENT@student.uva.nl", name: "Sam Renamed")
         assert_equal users(:student), found
         assert_equal "Sam Renamed", found.reload.name
     end
@@ -46,10 +46,35 @@ class UserTest < ActiveSupport::TestCase
 
     test "first ever account becomes the site admin" do
         Membership.delete_all
+        CourseDomain.update_all(created_by_id: nil)
         User.delete_all
         first = User.authenticate(email: "first@example.com", name: "First")
         assert first.admin?
         second = User.authenticate(email: "second@example.com", name: "Second")
         assert_not second.admin?
+    end
+
+    test "teacher? matches the teacher email domain exactly" do
+        assert users(:teacher).teacher?
+        assert_not users(:student).teacher?, "student.uva.nl is not a teacher domain"
+        assert_not users(:outsider).teacher?
+        assert_not User.new(email: "x@uva.nl.evil.com").teacher?
+        assert_not User.new(email: "").teacher?
+    end
+
+    test "a teacher may create a course until they have created one" do
+        assert users(:newteacher).may_create_course?
+        assert_not users(:teacher).may_create_course?,
+            "the teacher already created the algorithms course"
+        assert_not users(:student).may_create_course?
+        assert_not users(:outsider).may_create_course?
+        assert_not User.new(email: "someone@uva.nl").may_create_course?
+    end
+
+    test "an admin may always create a course" do
+        admin = users(:admin)
+        assert admin.may_create_course?
+        course_domains(:databases).update!(created_by: admin)
+        assert admin.may_create_course?
     end
 end

@@ -11,7 +11,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
         perform_enqueued_jobs do
             # a TA sees the domain list; a single-course student would be sent
             # straight to the hand page instead (see HomeController#index)
-            post auth_mail_create_path, params: { email: "ta@example.com" }
+            post auth_mail_create_path, params: { email: "ta@uva.nl" }
         end
         assert_redirected_to auth_mail_code_path
 
@@ -36,7 +36,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     test "a wrong code does not sign you in" do
         perform_enqueued_jobs do
-            post auth_mail_create_path, params: { email: "student@example.com" }
+            post auth_mail_create_path, params: { email: "student@student.uva.nl" }
         end
         post auth_mail_validate_path, params: { code: "zzzzzz" }
         assert_redirected_to auth_mail_login_path
@@ -52,7 +52,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     test "an expired code is rejected" do
         perform_enqueued_jobs do
-            post auth_mail_create_path, params: { email: "student@example.com" }
+            post auth_mail_create_path, params: { email: "student@student.uva.nl" }
         end
         code = latest_login_code
         travel 16.minutes do

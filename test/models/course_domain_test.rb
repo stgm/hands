@@ -40,4 +40,16 @@ class CourseDomainTest < ActiveSupport::TestCase
         assert_equal memberships(:student_algorithms),
             course_domains(:algorithms).self_join!(users(:student))
     end
+
+    test "managed_by? covers the creator and every admin" do
+        algorithms = course_domains(:algorithms)
+        assert algorithms.managed_by?(users(:teacher))
+        assert algorithms.managed_by?(users(:admin))
+        assert_not algorithms.managed_by?(users(:ta))
+        assert_not algorithms.managed_by?(users(:newteacher))
+
+        databases = course_domains(:databases)
+        assert_nil databases.created_by
+        assert_not databases.managed_by?(users(:teacher))
+    end
 end

@@ -1,21 +1,26 @@
 admin:
-    email: admin@example.com
+    email: admin@uva.nl
     name: Admin User
     admin: true
 
 teacher:
-    email: teacher@example.com
+    email: teacher@uva.nl
     name: Terry Teacher
 
+# A teacher who has not created a course yet and is a member of nothing.
+newteacher:
+    email: newteacher@uva.nl
+    name: Nora Newteacher
+
 ta:
-    email: ta@example.com
+    email: ta@uva.nl
     name: Tanya Assistant
 
 student:
-    email: student@example.com
+    email: student@student.uva.nl
     name: Sam Student
     student_number: "12345678"
 
 outsider:
-    email: outsider@example.com
+    email: outsider@example.org
     name: Olive Outsider

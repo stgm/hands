@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_04_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_06_120000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -52,6 +52,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_120000) do
   create_table "course_domains", force: :cascade do |t|
     t.boolean "ask_location", default: true, null: false
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.boolean "enrollment_open", default: true, null: false
     t.boolean "link_mode", default: false, null: false
     t.string "link_secret", null: false
@@ -61,6 +62,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_120000) do
     t.string "name", null: false
     t.string "slug", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_course_domains_on_created_by_id"
     t.index ["slug"], name: "index_course_domains_on_slug", unique: true
   end
 
@@ -313,6 +315,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_120000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "course_domains", "users", column: "created_by_id"
   add_foreign_key "hands", "course_domains"
   add_foreign_key "hands", "memberships"
   add_foreign_key "hands", "memberships", column: "assist_membership_id"

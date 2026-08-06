@@ -1,8 +1,14 @@
 class User < ApplicationRecord
     include Authenticatable
 
+    # Email domains whose members are staff rather than students. Matched
+    # exactly, so student.uva.nl (a different domain) is not a teacher domain.
+    TEACHER_EMAIL_DOMAINS = %w[uva.nl].freeze
+
     has_many :memberships, dependent: :destroy
     has_many :course_domains, through: :memberships
+    has_many :created_course_domains, class_name: "CourseDomain",
+        foreign_key: :created_by_id, dependent: :nullify, inverse_of: :created_by
 
     normalizes :email, with: ->(value) { value.to_s.strip.downcase }
 
@@ -16,6 +22,18 @@ class User < ApplicationRecord
 
     def display_name
         name.presence || email
+    end
+
+    def teacher?
+        TEACHER_EMAIL_DOMAINS.include?(email.to_s.split("@").last)
+    end
+
+    # A teacher may set up a single course for themselves; anything beyond that
+    # is created for them by a site admin.
+    def may_create_course?
+        return false unless persisted?
+
+        admin? || (teacher? && created_course_domains.none?)
     end
 
     def membership_in(course_domain)

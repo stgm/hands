@@ -6,7 +6,16 @@
 
 <% if logged_in? %>
   <nav class="mini-app-body" aria-label="Main menu">
-    <ul class="menu" role="list" data-controller="menu">
+    <%# The empty-list message differs per role, because the footer offers a
+        different next step to admins and to teachers who may create a course. %>
+    <% empty_variant = if current_user.admin?
+                         "menu--courses-admin"
+                       elsif current_user.may_create_course?
+                         "menu--courses-creator"
+                       else
+                         "menu--courses-student"
+                       end %>
+    <ul class="menu menu--courses <%= empty_variant %>" role="list" data-controller="menu">
       <% @memberships.each do |membership| %>
         <% domain = membership.course_domain %>
         <li>
@@ -18,15 +27,13 @@
         </li>
       <% end %>
 
-      <% if @memberships.none? %>
-        <li class="menu-message">You are not a member of any course domain yet.</li>
-      <% end %>
-
     </ul>
   </nav>
   <div class="mini-app-footer">
     <% if current_user.admin? %>
         <%= link_to "Manage domains", admin_course_domains_path, class: "action" %>
+    <% elsif current_user.may_create_course? %>
+        <%= link_to "Create a course", new_course_path, class: "action" %>
     <% end %>
 
     <%= button_to "Sign out", logout_path, method: :delete, class: "action danger",

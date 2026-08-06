@@ -60,10 +60,12 @@ h4 { font-size: 1.5rem; }
 h5 { font-size: 1.25rem; }
 h6 { font-size: 1rem; }
 
-// Default label behaviour
+// Default label behaviour. The small start padding lines the text up with the
+// padded text inside the control below it.
 label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    padding-inline-start: 0.25rem;
 }
 
 // Basic form field styling.
@@ -91,6 +93,18 @@ select {
     }
 }
 
+// A select styled by the browser ignores our padding and ends up shorter than a
+// text field, so draw it ourselves (chevron included) to match.
+select {
+    appearance: none;
+    padding-inline-end: 2rem;
+    // The stroke repeats --text-dark: a data URI cannot read a custom property.
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23212529' stroke-width='2'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem 1rem;
+}
+
 textarea { min-height: 4rem; }
 
 input[type=checkbox], input[type=radio] {
@@ -104,7 +118,8 @@ input[type=checkbox], input[type=radio] {
     gap: 0.5rem;
     margin-bottom: 0.5rem;
 
-    label { margin-bottom: 0; }
+    // Sitting beside the control, not above it, so no indent to line up with.
+    label { margin-bottom: 0; padding-inline-start: 0; }
 }
 
 // A bordered box grouping related fields.
@@ -121,6 +136,8 @@ input[type=checkbox], input[type=radio] {
     margin-top: 0.25rem;
     font-size: 0.875em;
     color: var(--muted);
+    padding-inline: 0.25rem;
+
 }
 
 // Minimal set of layout/text helpers actually used across the app.
