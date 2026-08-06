@@ -1,0 +1,13 @@
+{
+  "name": "Hands",
+  "short_name": "Hands",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#e3f1ff",
+  "theme_color": "#e3f1ff",
+  "icons": [
+    { "src": "/icon.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" }
+  ]
+}

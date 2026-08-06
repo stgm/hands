@@ -1,3 +1,36 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfe6ff"/>
+      <stop offset="1" stop-color="#8ec3ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- centers the hand within the square -->
+  <g transform="translate(32 -6)">
+
+  <!-- A raised hand, tilted as if waving. Fingers are rounded bars that tuck
+       under the palm, so the palm shape hides their square bottoms. -->
+  <g transform="rotate(-10 256 280)" fill="#ffd7a8">
+    <rect x="166" y="140" width="42" height="170" rx="21"/>
+    <rect x="214" y="112" width="42" height="198" rx="21"/>
+    <rect x="262" y="126" width="42" height="184" rx="21"/>
+    <rect x="310" y="168" width="42" height="142" rx="21"/>
+    <rect x="112" y="228" width="44" height="132" rx="22"
+          transform="rotate(-28 134 294)"/>
+    <rect x="158" y="238" width="196" height="164" rx="62"/>
+  </g>
+
+  <!-- Face on the palm. -->
+  <g transform="rotate(-10 256 280)">
+    <circle cx="222" cy="308" r="11" fill="#4a3b2f"/>
+    <circle cx="290" cy="308" r="11" fill="#4a3b2f"/>
+    <path d="M226 344 q30 30 60 0" stroke="#4a3b2f" stroke-width="11"
+          stroke-linecap="round" fill="none"/>
+    <circle cx="196" cy="336" r="15" fill="#ff9d9d" opacity="0.55"/>
+    <circle cx="316" cy="336" r="15" fill="#ff9d9d" opacity="0.55"/>
+  </g>
+  </g>
 </svg>

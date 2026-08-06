@@ -21,6 +21,11 @@
 
     <%= yield :head %>
 
+    <%# Without a manifest, iOS scopes an installed web app to its launch URL
+        alone, so every other page opens with browser chrome. scope: "/" keeps
+        the whole app in standalone mode. %>
+    <link rel="manifest" href="/manifest.json">
+
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
