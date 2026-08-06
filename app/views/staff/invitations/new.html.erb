@@ -1,0 +1,25 @@
+<% content_for :title, "Invite staff — #{current_course_domain.name}" %>
+<% content_for :app_icon, "✉️" %>
+<% content_for :app_title, "Invite staff" %>
+<% content_for :app_subtitle, current_course_domain.name %>
+
+<div class="mini-app-body hands-app">
+  <p class="text-muted">We email an invitation link. They sign in and join
+     <%= current_course_domain.name %> with the role you pick here.</p>
+
+  <%= form_with url: domain_staff_invitations_path(current_course_domain.slug), method: :post, id: "invitation_form" do |f| %>
+    <div class="mb-3">
+      <%= f.label :email, "Email address" %>
+      <%= f.email_field :email, required: true, autofocus: true, placeholder: "email@example.org" %>
+    </div>
+    <div class="mb-3">
+      <%= f.label :role, "Role" %>
+      <%= f.select :role, Invitation.roles.keys.map { |role| [ role.capitalize, role ] } %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mini-app-footer">
+  <%= link_to "Back", domain_staff_path(current_course_domain.slug), class: "action" %>
+  <%= submit_tag "Send invitation", class: "action primary", form: "invitation_form" %>
+</div>

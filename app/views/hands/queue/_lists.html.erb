@@ -6,7 +6,7 @@
 <% waiting = hands.select { |h| h.assist_membership_id.nil? } %>
 
 <% (claimed + waiting).each do |hand| %>
-  <li>
+  <li data-group="<%= hand.membership.group %>">
     <%= link_to domain_queue_hand_path(course_domain.slug, hand),
           id: dom_id(hand),
           class: "#{'menu-item--active' if hand.assist} #{'menu-item--helpline' if hand.helpline?}" do %>

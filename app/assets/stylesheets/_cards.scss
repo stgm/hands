@@ -177,18 +177,88 @@
 }
 
 // Empty queue state: shown via generated content instead of DOM markup, same
-// technique as the empty states in _notes.scss/_all_students.scss.
-#queue:not(:has(li)) {
+// technique as the empty states in _notes.scss/_all_students.scss. The second
+// selector covers a group tab that filters everything away.
+#queue:not(:has(li)),
+#queue:has(li):not(:has(li:not([hidden]))) {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+}
 
-    &::before {
-        content: "No requests. Go and find a student to talk to! ❤️";
-        max-width: 16rem;
-        font-size: 1.25rem;
+#queue:not(:has(li))::before {
+    content: "No requests. Go and find a student to talk to! ❤️";
+    max-width: 16rem;
+    font-size: 1.25rem;
+}
+
+#queue:has(li):not(:has(li:not([hidden])))::before {
+    content: "No requests from this group.";
+    max-width: 16rem;
+    font-size: 1.25rem;
+    color: var(--muted);
+}
+
+// Group tabs above the queue, only rendered for courses that have groups.
+// With a mouse or trackpad the tabs wrap onto as many lines as they need,
+// since sideways scrolling there is awkward and the overflow stays hidden.
+.queue-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    flex: 0 0 auto;
+
+    // On touch the strip stays one swipeable line instead. The scrollbar is
+    // hidden because it would sit right under the tabs and read as a rule.
+    @media (pointer: coarse) {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar { display: none; }
     }
+}
+
+// Nested so these win over the default button look in _basics.scss, which is
+// specific enough (button:not()...:not()) to outrank a bare class.
+.queue-tabs .queue-tab {
+    border: 1px solid var(--border-muted);
+    background-color: transparent;
+    color: var(--muted);
+    min-height: 2rem;
+    padding-inline: 0.85rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &.queue-tab--active {
+        background-color: var(--text-dark);
+        border-color: var(--text-dark);
+        color: var(--white);
+    }
+}
+
+// The group a request's student belongs to, shown on each queue item.
+.badge--group {
+    background-color: var(--bg-informational);
+    color: var(--text-dark);
+    border: 1px solid var(--border-muted);
+}
+
+// A row the roster import will skip.
+.badge--danger {
+    background-color: var(--danger);
+}
+
+// The roster import preview: a plain status column instead of the action
+// buttons the menu styles pad by default.
+.menu.import-preview li > div:last-child {
+    justify-content: center;
+    padding-inline: 1rem;
+
+    .badge { white-space: nowrap; }
 }
 
 // The student widget fills its card on the standalone page.

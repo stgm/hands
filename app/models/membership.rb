@@ -16,9 +16,13 @@ class Membership < ApplicationRecord
 
     validates :user_id, uniqueness: { scope: :course_domain_id }
 
+    # A blank group is no group, so an empty CSV cell doesn't create a "" group.
+    normalizes :group, with: ->(value) { value.strip.presence }
+
     scope :staff, -> { where(role: [ :assistant, :teacher ]) }
     scope :students, -> { where(role: :student) }
     scope :available, -> { where("available_until > ?", Time.current) }
+    scope :grouped, -> { where.not(group: nil) }
 
     def staff?
         assistant? || teacher?

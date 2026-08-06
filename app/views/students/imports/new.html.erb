@@ -1,0 +1,36 @@
+<% content_for :title, "Students — #{current_course_domain.name}" %>
+<% content_for :app_icon, "📋" %>
+<% content_for :app_title, "Students" %>
+<% content_for :app_subtitle, current_course_domain.name %>
+
+<div class="mini-app-body hands-app">
+  <p>
+    <strong><%= pluralize(@student_count, "student") %></strong> enrolled<% if @group_names.any? %>,
+      in <%= pluralize(@group_names.size, "group") %>:
+      <%= safe_join(@group_names.map { |group| tag.span(group, class: "badge") }, " ") %><% end %>.
+  </p>
+
+  <p>Paste a student export, including its header line. Students are matched by
+     email address: accounts are created where they don't exist yet, everyone in
+     the list is enrolled in this course, and the group column becomes their
+     group here.</p>
+
+  <p class="text-muted">Recognised columns: email, name (or first, middle and
+     last name), student number, group. English or Dutch headers, separated by
+     tabs, commas or semicolons. Students already enrolled but missing from the
+     list are left alone.</p>
+
+  <%# Turbo is off here: this step renders the preview page rather than
+      redirecting, which a Turbo-driven form submission refuses to display. %>
+  <%= form_with url: domain_students_import_path(current_course_domain.slug), method: :post,
+        id: "import_form", data: { turbo: false } do |f| %>
+    <%= f.label :text, "Student list" %>
+    <%= f.text_area :text, rows: 10, autofocus: true, required: true,
+          placeholder: "email;name;group\nstudent@example.org;Sam Student;Group 2" %>
+  <% end %>
+</div>
+
+<div class="mini-app-footer">
+  <%= link_to "All students", domain_attendance_path(current_course_domain.slug), class: "action" %>
+  <%= submit_tag "Check list", class: "action primary", form: "import_form" %>
+</div>

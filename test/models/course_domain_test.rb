@@ -52,4 +52,32 @@ class CourseDomainTest < ActiveSupport::TestCase
         assert_nil databases.created_by
         assert_not databases.managed_by?(users(:teacher))
     end
+
+    test "a course has no groups until memberships get one" do
+        algorithms = course_domains(:algorithms)
+        assert_not algorithms.groups?
+        assert_empty algorithms.group_names
+
+        memberships(:student_algorithms).update!(group: "Group 1")
+        assert algorithms.groups?
+        assert_equal [ "Group 1" ], algorithms.group_names
+    end
+
+    test "group_names sorts numbers naturally and lists each group once" do
+        algorithms = course_domains(:algorithms)
+        memberships(:student_algorithms).update!(group: "Group 10")
+        algorithms.memberships.create!(user: users(:outsider), role: :student, group: "Group 2")
+        algorithms.memberships.create!(user: users(:newteacher), role: :student, group: "Group 2")
+
+        assert_equal [ "Group 2", "Group 10" ], algorithms.group_names
+    end
+
+    test "ungrouped_students? ignores staff without a group" do
+        algorithms = course_domains(:algorithms)
+        memberships(:student_algorithms).update!(group: "Group 1")
+        assert_not algorithms.ungrouped_students?
+
+        algorithms.memberships.create!(user: users(:outsider), role: :student)
+        assert algorithms.ungrouped_students?
+    end
 end

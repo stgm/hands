@@ -1,49 +1,36 @@
 <% content_for :title, "Staff — #{current_course_domain.name}" %>
 <% content_for :app_icon, "👥" %>
 <% content_for :app_title, "Staff" %>
-<% content_for :app_subtitle, "#{current_course_domain.name} — #{@student_count} students enrolled" %>
+<% content_for :app_subtitle, current_course_domain.name %>
 
-<div class="mini-app-body hands-app">
-  <h2 class="h6">Team</h2>
-  <ul class="menu">
-      <% @staff.each do |member| %>
-        <li>
-          <div>
-            <%= member.display_name %>
-            <div class="small text-muted"><%= member.user.email %></div>
-            <%= form_with url: domain_staff_member_path(current_course_domain.slug, member), method: :patch do |f| %>
-              <%= f.select :role, Membership.roles.keys.map { |r| [r.capitalize, r] }, { selected: member.role }, onchange: "this.form.requestSubmit()" %>
-            <% end %>
-          </div>
-          <%= button_to "Remove", domain_staff_member_path(current_course_domain.slug, member), method: :delete, class: "btn--outline-danger", form: { data: { turbo_confirm: "Remove #{member.display_name}?" } } %>
-        </li>
-      <% end %>
-  </ul>
-
-  <h2 class="h6 mt-4">Invite staff</h2>
-  <%= form_with url: domain_staff_invitations_path(current_course_domain.slug), method: :post do |f| %>
-    <div class="mb-2">
-      <%= f.email_field :email, required: true, placeholder: "email@example.org" %>
-    </div>
-    <div class="mb-2">
-      <%= f.select :role, Invitation.roles.keys.map { |r| [r.capitalize, r] } %>
-    </div>
-    <%= f.submit "Send invitation", class: "btn btn--primary" %>
+<ul class="menu mini-app-body" role="list">
+  <% @staff.each do |member| %>
+    <li>
+      <div>
+        <span class="list-item__title"><%= member.display_name %></span>
+        <div class="small text-muted"><%= member.user.email %></div>
+        <%= form_with url: domain_staff_member_path(current_course_domain.slug, member), method: :patch do |f| %>
+          <%= f.select :role, Membership.roles.keys.map { |role| [ role.capitalize, role ] }, { selected: member.role }, onchange: "this.form.requestSubmit()" %>
+        <% end %>
+      </div>
+      <%= button_to "Remove", domain_staff_member_path(current_course_domain.slug, member), method: :delete, class: "btn--outline-danger", form: { data: { turbo_confirm: "Remove #{member.display_name}?" } } %>
+    </li>
   <% end %>
 
-  <% if @pending.any? %>
-    <h3 class="h6 mt-4">Pending</h3>
-    <ul class="menu">
-      <% @pending.each do |invitation| %>
-        <li>
-          <div>
-            <span><%= invitation.email %></span>
-            <span class="badge"><%= invitation.role %></span>
-          </div>
-          <%= button_to "Cancel", domain_staff_invitation_path(current_course_domain.slug, invitation), method: :delete, class: "btn btn--danger-text",
-                form: { data: { turbo_confirm: "Cancel the invitation to #{invitation.email}?" } } %>
-        </li>
-      <% end %>
-    </ul>
+  <%# Invitations that have been sent but not accepted sit in the same list, so
+      the page reads as one roster of people who are (or will be) staff. %>
+  <% @pending.each do |invitation| %>
+    <li>
+      <div>
+        <span class="list-item__title text-muted"><%= invitation.email %></span>
+        <div class="small text-muted">Invited as <%= invitation.role %>, not accepted yet</div>
+      </div>
+      <%= button_to "Cancel", domain_staff_invitation_path(current_course_domain.slug, invitation), method: :delete, class: "btn--outline-danger",
+            form: { data: { turbo_confirm: "Cancel the invitation to #{invitation.email}?" } } %>
+    </li>
   <% end %>
+</ul>
+
+<div class="mini-app-footer">
+  <%= link_to "Invite staff", new_domain_staff_invitation_path(current_course_domain.slug), class: "action primary" %>
 </div>

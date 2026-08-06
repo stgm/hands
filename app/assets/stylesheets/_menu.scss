@@ -26,6 +26,12 @@
         }
     }
 
+    // The display above beats the browser's own [hidden] rule, so client-side
+    // filters (attendance, queue group tabs) need this to hide an item.
+    li[hidden] {
+        display: none;
+    }
+
     // The contents of a menu item part are stacked vertically.
     li > * {
         display: flex;

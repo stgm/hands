@@ -30,4 +30,13 @@ class MembershipTest < ActiveSupport::TestCase
         assert_includes Membership.staff, memberships(:ta_algorithms)
         assert_not_includes Membership.staff, memberships(:student_algorithms)
     end
+
+    test "a blank group is stored as no group" do
+        membership = memberships(:student_algorithms)
+        membership.update!(group: "  Group 1 ")
+        assert_equal "Group 1", membership.group
+
+        membership.update!(group: "   ")
+        assert_nil membership.group
+    end
 end

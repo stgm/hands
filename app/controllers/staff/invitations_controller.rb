@@ -3,6 +3,9 @@ class Staff::InvitationsController < ApplicationController
 
     before_action :require_senior
 
+    def new
+    end
+
     def create
         invitation = current_course_domain.invitations.pending.find_or_initialize_by(email: params[:email].to_s.strip.downcase)
         invitation.assign_attributes(role: params[:role].presence || "assistant", invited_by: current_user)
@@ -10,7 +13,7 @@ class Staff::InvitationsController < ApplicationController
             InvitationMailer.with(invitation: invitation).invite.deliver_later
             redirect_to domain_staff_path(current_course_domain.slug), notice: "Invitation sent to #{invitation.email}"
         else
-            redirect_to domain_staff_path(current_course_domain.slug), alert: invitation.errors.full_messages.to_sentence
+            redirect_to new_domain_staff_invitation_path(current_course_domain.slug), alert: invitation.errors.full_messages.to_sentence
         end
     end
 

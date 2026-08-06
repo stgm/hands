@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_06_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_06_130000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -110,14 +110,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_120000) do
     t.datetime "available_until"
     t.integer "course_domain_id", null: false
     t.datetime "created_at", null: false
+    t.string "group"
     t.integer "invited_by_id"
     t.string "last_location"
     t.datetime "last_seen_at"
     t.string "locale"
+    t.string "queue_group_filter"
     t.integer "role", default: 0, null: false
     t.string "source_label"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["course_domain_id", "group"], name: "index_memberships_on_course_domain_id_and_group"
     t.index ["course_domain_id"], name: "index_memberships_on_course_domain_id"
     t.index ["invited_by_id"], name: "index_memberships_on_invited_by_id"
     t.index ["user_id", "course_domain_id"], name: "index_memberships_on_user_id_and_course_domain_id", unique: true

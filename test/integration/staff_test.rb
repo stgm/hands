@@ -16,6 +16,30 @@ class StaffTest < ActionDispatch::IntegrationTest
         assert_response :forbidden
     end
 
+    test "the staff page links to the invite page, which teachers can open" do
+        sign_in_as(users(:teacher))
+        get domain_staff_path(@domain.slug)
+        assert_select "a[href=?]", new_domain_staff_invitation_path(@domain.slug)
+
+        get new_domain_staff_invitation_path(@domain.slug)
+        assert_response :success
+        assert_select "form input[type=email]"
+    end
+
+    test "pending invitations are listed on the staff page" do
+        @domain.invitations.create!(email: "pending@example.org", role: :assistant, invited_by: users(:teacher))
+        sign_in_as(users(:teacher))
+        get domain_staff_path(@domain.slug)
+
+        assert_select "li", /pending@example.org/
+    end
+
+    test "assistants may not open the invite page" do
+        sign_in_as(users(:ta))
+        get new_domain_staff_invitation_path(@domain.slug)
+        assert_response :forbidden
+    end
+
     test "a teacher invites a staff member and an email is sent" do
         sign_in_as(users(:teacher))
         assert_difference -> { @domain.invitations.pending.count }, 1 do

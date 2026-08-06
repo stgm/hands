@@ -3,7 +3,30 @@
 <% content_for :app_title, "Queue" %>
 <% content_for :app_subtitle, current_course_domain.name %>
 
+<%# The group tabs only exist once a roster import has given this course groups.
+    Filtering is client-side so the queue broadcast stays identical on every
+    screen; the selected tab is remembered per staff member (QueueController#filter).
+    An empty string is the "no group" tab — a group name is never blank. %>
+<% if current_course_domain.groups? %>
+  <% tabs = current_course_domain.group_names.map { |name| [ name, name ] } %>
+  <% tabs << [ "No group", "" ] if current_course_domain.ungrouped_students? %>
+  <% stored = current_membership&.queue_group_filter %>
+  <% selected = tabs.any? { |_, key| key == stored } ? stored : nil %>
+
+  <% content_for :container_data do %>data-controller="group-filter" data-group-filter-url-value="<%= filter_domain_queue_hands_path(current_course_domain.slug) %>" data-group-filter-selected-value="<%= selected %>" data-group-filter-all-value="<%= selected.nil? %>"<% end %>
+
+  <nav class="queue-tabs" aria-label="Filter by group">
+    <button type="button" class="queue-tab <%= "queue-tab--active" if selected.nil? %>"
+            data-action="group-filter#select" data-group-filter-target="tab">All</button>
+    <% tabs.each do |label, key| %>
+      <button type="button" class="queue-tab <%= "queue-tab--active" if selected == key %>"
+              data-action="group-filter#select" data-group-filter-target="tab"
+              data-group="<%= key %>"><%= label %></button>
+    <% end %>
+  </nav>
+<% end %>
+
 <%= turbo_stream_from current_course_domain, :queue %>
-<ul id="queue" class="mini-app-body menu" role="list">
+<ul id="queue" class="mini-app-body menu" role="list" data-group-filter-target="list">
   <%= render "hands/queue/lists", hands: @hands, course_domain: current_course_domain %>
 </ul>

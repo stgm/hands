@@ -7,8 +7,6 @@ class StaffController < ApplicationController
     def index
         @staff = current_course_domain.memberships.staff.includes(:user)
         @pending = current_course_domain.invitations.pending.order(:created_at)
-        @student_count = current_course_domain.memberships.students.count
-        @invitation = Invitation.new
     end
 
     def update

@@ -1,0 +1,56 @@
+<% content_for :title, "Import students — #{current_course_domain.name}" %>
+<% content_for :app_icon, "📋" %>
+<% content_for :app_title, "Check the import" %>
+<% content_for :app_subtitle, current_course_domain.name %>
+
+<% counts = @import.counts %>
+
+<div class="mini-app-body hands-app">
+  <p>
+    <strong><%= counts[:new_user] %></strong> accounts to create,
+    <strong><%= counts[:new_membership] %></strong> existing accounts to enrol,
+    <strong><%= counts[:group_change] %></strong> group changes,
+    <strong><%= counts[:unchanged] %></strong> unchanged.
+    <% if counts[nil].to_i.positive? %>
+      <strong><%= pluralize(counts[nil], "row") %></strong> will be skipped.
+    <% end %>
+  </p>
+
+  <% if @import.groups.any? %>
+    <p>Groups in this list: <%= safe_join(@import.groups.map { |group| tag.span(group, class: "badge") }, " ") %></p>
+  <% else %>
+    <p class="text-muted">No group column found — students will be imported without a group.</p>
+  <% end %>
+
+  <ul class="menu import-preview">
+    <% @import.rows.each do |row| %>
+      <li>
+        <div>
+          <span class="list-item__title"><%= row.name.presence || row.email %></span>
+          <div class="small text-muted">
+            <%= row.email %><% if row.group.present? %> · <%= row.group %><% end %>
+          </div>
+        </div>
+        <div>
+          <% if row.ok? %>
+            <span class="badge"><%= row.status.to_s.humanize %></span>
+          <% else %>
+            <span class="badge badge--danger">Line <%= row.line %>: <%= row.error %></span>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <%# The file's text rides along in the form, so nothing has to be stored
+      between the preview and the import; rosters are small enough for that. %>
+  <%= form_with url: domain_confirm_students_import_path(current_course_domain.slug), method: :post,
+        id: "confirm_import_form" do |f| %>
+    <%= f.hidden_field :text, value: @text %>
+  <% end %>
+</div>
+
+<div class="mini-app-footer">
+  <%= link_to "Paste another list", domain_students_import_path(current_course_domain.slug), class: "action" %>
+  <%= submit_tag "Import these students", class: "action primary", form: "confirm_import_form" %>
+</div>

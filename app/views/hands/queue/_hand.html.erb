@@ -2,6 +2,9 @@
 <% if hand.assist %>
   <span class="badge float-end"><%= hand.assist.display_name %></span>
 <% end %>
+<% if hand.membership.group.present? %>
+  <span class="badge badge--group"><%= hand.membership.group %></span>
+<% end %>
 <p>
   <% if hand.subject.present? %><strong><%= hand.subject %></strong>&mdash;<% end %><%= hand.help_question %>
 </p>

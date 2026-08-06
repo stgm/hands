@@ -21,6 +21,7 @@
         <li><%= link_to "All students", domain_attendance_path(@course_domain.slug) %></li>
         <li><%= link_to "Recent notes", domain_notes_path(@course_domain.slug) %></li>
         <% if acting_senior? %>
+          <li><%= link_to "Manage students", domain_students_import_path(@course_domain.slug) %></li>
           <li><%= link_to "Manage staff", domain_staff_path(@course_domain.slug) %></li>
         <% end %>
         <% if @course_domain.managed_by?(current_user) %>

@@ -8,7 +8,15 @@ class Hands::QueueController < ApplicationController
 
     # GET /<slug>/queue — the staff queue (all open hands, viewer-independent)
     def index
-        @hands = current_course_domain.hands.open.order(:created_at)
+        @hands = current_course_domain.hands.open.includes(membership: :user).order(:created_at)
+    end
+
+    # PATCH /<slug>/queue/filter — remember which group tab this staff member
+    # selected. The queue itself stays viewer-independent: every screen receives
+    # the same broadcast and each browser hides what its own tab says to hide.
+    def filter
+        current_membership&.update(queue_group_filter: params[:group])
+        head :no_content
     end
 
     # GET /<slug>/queue/:id — the request detail page. Opening a request

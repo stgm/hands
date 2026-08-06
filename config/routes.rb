@@ -62,6 +62,8 @@ Rails.application.routes.draw do
         # singular student :hand resource above)
         resources :hands, only: [ :index, :show ], controller: "hands/queue",
             path: "queue", as: :queue_hands do
+            # remembers the staff member's group tab across sessions
+            collection { patch :filter }
             member do
                 put :claim
                 put :done
@@ -71,6 +73,13 @@ Rails.application.routes.draw do
 
         resource :availability, only: [ :edit, :update ], controller: "hands/availabilities"
         resources :notes, only: [ :index, :create ], controller: "hands/notes"
+
+        # the student roster: paste a list, preview it, then apply it. Must stay
+        # above students/:id, which would otherwise swallow "import".
+        get  "students/import", to: "students/imports#new", as: :students_import
+        post "students/import", to: "students/imports#create"
+        post "students/import/confirm", to: "students/imports#confirm", as: :confirm_students_import
+
         get "students/:id", to: "hands/notes#student", as: :student_notes
         get "attendance", to: "hands/attendance#index", as: :attendance
 
@@ -78,7 +87,7 @@ Rails.application.routes.draw do
         get "staff", to: "staff#index", as: :staff
         patch "staff/members/:id", to: "staff#update", as: :staff_member
         delete "staff/members/:id", to: "staff#destroy"
-        resources :invitations, only: [ :create, :destroy ], controller: "staff/invitations", path: "staff/invitations", as: :staff_invitations
+        resources :invitations, only: [ :new, :create, :destroy ], controller: "staff/invitations", path: "staff/invitations", as: :staff_invitations
     end
 
     # Accepting a staff invitation (identifies the domain via the token; requires
