@@ -20,16 +20,22 @@
         <% end %>
         <li><%= link_to "All students", domain_attendance_path(@course_domain.slug) %></li>
         <li><%= link_to "Recent notes", domain_notes_path(@course_domain.slug) %></li>
-        <% if acting_senior? %>
-          <li><%= link_to "Manage students", domain_students_import_path(@course_domain.slug) %></li>
-          <li><%= link_to "Manage staff", domain_staff_path(@course_domain.slug) %></li>
-        <% end %>
-        <% if @course_domain.managed_by?(current_user) %>
-          <li><%= link_to "Course settings", edit_course_path(@course_domain) %></li>
-        <% end %>
       <% end %>
     </ul>
   </nav>
+  <%# Managing students, staff and course settings are administrative rather
+      than day-to-day work, so they sit in the footer instead of the menu. %>
+  <% if acting_staff? && (acting_senior? || @course_domain.managed_by?(current_user)) %>
+    <div class="mini-app-footer">
+      <% if acting_senior? %>
+        <%= link_to "Students", domain_students_import_path(@course_domain.slug), class: "action" %>
+        <%= link_to "Staff", domain_staff_path(@course_domain.slug), class: "action" %>
+      <% end %>
+      <% if @course_domain.managed_by?(current_user) %>
+        <%= link_to "Settings", edit_course_path(@course_domain), class: "action" %>
+      <% end %>
+    </div>
+  <% end %>
 <% else %>
   <div class="mini-app-body hands-app">
     <div class="message">
