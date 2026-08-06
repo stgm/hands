@@ -7,15 +7,25 @@ import { Controller } from "@hotwired/stimulus"
 // A tab's group is its data-group attribute: absent on "All", empty on "No group"
 // (a real group name is never blank). Like filter_controller, a MutationObserver
 // re-applies after a Turbo Stream replaces the list.
+//
+// The active tab is the only record of the choice in the page. Reading it back
+// here (rather than from a separate attribute the click never updates) is what
+// makes a Turbo restoration visit — which replays a cached snapshot without
+// asking the server — come back still filtered.
 export default class extends Controller {
   static targets = ["tab", "list"]
-  static values = { url: String, selected: String, all: Boolean }
+  static values = { url: String }
 
   connect() {
-    this.selection = this.allValue ? null : this.selectedValue
+    this.selection = this.selectionFromTabs()
     this.observer = new MutationObserver(() => this.apply())
     this.observer.observe(this.listTarget, { childList: true, subtree: true })
     this.apply()
+  }
+
+  selectionFromTabs() {
+    const active = this.tabTargets.find((tab) => tab.classList.contains("queue-tab--active"))
+    return active && "group" in active.dataset ? active.dataset.group : null
   }
 
   disconnect() {

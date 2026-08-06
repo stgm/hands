@@ -13,7 +13,7 @@
   <% stored = current_membership&.queue_group_filter %>
   <% selected = tabs.any? { |_, key| key == stored } ? stored : nil %>
 
-  <% content_for :container_data do %>data-controller="group-filter" data-group-filter-url-value="<%= filter_domain_queue_hands_path(current_course_domain.slug) %>" data-group-filter-selected-value="<%= selected %>" data-group-filter-all-value="<%= selected.nil? %>"<% end %>
+  <% content_for :container_data do %>data-controller="group-filter" data-group-filter-url-value="<%= filter_domain_queue_hands_path(current_course_domain.slug) %>"<% end %>
 
   <nav class="queue-tabs" aria-label="Filter by group">
     <button type="button" class="queue-tab <%= "queue-tab--active" if selected.nil? %>"

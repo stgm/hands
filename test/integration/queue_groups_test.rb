@@ -52,8 +52,10 @@ class QueueGroupsTest < ActionDispatch::IntegrationTest
         assert_response :no_content
         assert_equal "Group 2", teacher.reload.queue_group_filter
 
+        # The active tab carries the group: it is what the Stimulus controller
+        # reads back, including from a Turbo-cached snapshot on a back visit.
         get domain_queue_hands_path(@domain.slug)
-        assert_select ".queue-tab--active", "Group 2"
+        assert_select ".queue-tab--active[data-group=?]", "Group 2"
 
         # no group param means the "All" tab
         patch filter_domain_queue_hands_path(@domain.slug)
