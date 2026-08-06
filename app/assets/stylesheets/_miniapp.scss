@@ -4,6 +4,12 @@
 
 @use "basics";
 
+// The safe areas around the notch and the overscroll area are painted from the
+// root element, not from body, so give it the gradient's top color.
+html:has(> body.mini-app) {
+    background-color: var(--app-gradient-blue);
+}
+
 body.mini-app {
     background: linear-gradient(180deg, var(--app-gradient-blue), var(--app-gradient-yellow)) fixed;
     // Must be a definite height, not min-height: the "main" grid row is 1fr
