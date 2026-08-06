@@ -5,7 +5,7 @@
 class CourseDomainsController < ApplicationController
     before_action :authorize
     before_action :require_creation_allowed, only: [ :new, :create ]
-    before_action :set_course_domain, only: [ :edit, :update, :rotate_secret ]
+    before_action :set_course_domain, only: [ :edit, :update ]
 
     def new
         @course_domain = CourseDomain.new
@@ -42,11 +42,6 @@ class CourseDomainsController < ApplicationController
         end
     end
 
-    def rotate_secret
-        @course_domain.rotate_link_secret!
-        redirect_to edit_course_path(@course_domain), notice: "Link secret rotated"
-    end
-
     private
 
     def require_creation_allowed
@@ -61,6 +56,6 @@ class CourseDomainsController < ApplicationController
     end
 
     def course_domain_params
-        params.require(:course_domain).permit(*CourseDomain::SETTABLE_ATTRIBUTES)
+        params.require(:course_domain).permit(*CourseDomain::TEACHER_SETTABLE_ATTRIBUTES)
     end
 end

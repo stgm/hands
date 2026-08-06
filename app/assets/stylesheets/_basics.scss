@@ -130,6 +130,17 @@ input[type=checkbox], input[type=radio] {
     margin-bottom: 1rem;
 }
 
+// A link meant to be read and copied off the screen, so it wraps mid-URL
+// rather than overflowing.
+.invite-link code {
+    display: block;
+    padding: 0.75rem;
+    background-color: var(--bg-informational);
+    border: 1px solid var(--control-border);
+    border-radius: 0.375rem;
+    overflow-wrap: anywhere;
+}
+
 // Small helper text below a field.
 .hint {
     display: block;

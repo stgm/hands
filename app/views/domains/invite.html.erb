@@ -1,0 +1,24 @@
+<% content_for :title, "Invite link for #{@course_domain.name}" %>
+<% content_for :app_icon, "🔗" %>
+<% content_for :app_title, "Invite link" %>
+<% content_for :app_subtitle, @course_domain.name %>
+
+<div class="mini-app-body hands-app">
+  <p class="text-muted">
+    Email this link to your students or put it on Canvas. They sign in
+    and join the <%= @course_domain.name %> course themselves.
+  </p>
+
+  <p class="invite-link"><code><%= @invite_url %></code></p>
+
+  <% unless @course_domain.enrollment_open? %>
+    <div class="alert alert--danger">
+      Enrollment is closed, so this link will not let students join yet.
+    </div>
+  <% end %>
+</div>
+
+<div class="mini-app-footer" data-controller="clipboard" data-clipboard-text-value="<%= @invite_url %>">
+  <button type="button" class="action primary" data-clipboard-target="button"
+          data-action="clipboard#copy">Copy link</button>
+</div>

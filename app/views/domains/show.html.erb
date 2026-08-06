@@ -6,12 +6,18 @@
 <% if current_membership || acting_staff? %>
   <nav class="mini-app-body" aria-label="<%= @course_domain.name %> menu">
     <ul class="menu" role="list" data-controller="menu">
-      <% if current_membership %>
+      <%# Staff work from the queue, so their own "ask a question" entry sits
+          below it; for a student it is the only thing on the menu. %>
+      <% if current_membership && !acting_staff? %>
         <li><%= link_to "Ask a question", domain_hand_path(@course_domain.slug) %></li>
       <% end %>
 
       <% if acting_staff? %>
+        <li><%= link_to "Invite link for students", domain_invite_path(@course_domain.slug) %></li>
         <li><%= link_to "Open the queue", domain_queue_hands_path(@course_domain.slug) %></li>
+        <% if current_membership %>
+          <li><%= link_to "Ask a question", domain_hand_path(@course_domain.slug) %></li>
+        <% end %>
         <li><%= link_to "All students", domain_attendance_path(@course_domain.slug) %></li>
         <li><%= link_to "Recent notes", domain_notes_path(@course_domain.slug) %></li>
         <% if acting_senior? %>

@@ -20,6 +20,14 @@ class DomainsTest < ActionDispatch::IntegrationTest
         assert_select "a", text: "Open the queue"
     end
 
+    test "the staff menu leads with the invite link and puts the queue above asking" do
+        sign_in_as(users(:ta))
+        get domain_root_path(course_domains(:algorithms).slug)
+        items = css_select(".menu a").map { |link| link.text.strip }
+        assert_equal "Invite link for students", items.first
+        assert_operator items.index("Open the queue"), :<, items.index("Ask a question")
+    end
+
     test "a non-member can self-join an open domain" do
         sign_in_as(users(:outsider))
         assert_difference -> { Membership.count }, 1 do

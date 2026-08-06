@@ -1,9 +1,17 @@
 class DomainsController < ApplicationController
     include DomainScoped
 
+    before_action :require_staff, only: [ :invite ]
+
     # Landing page for a course domain at /<slug>. Members see their entry
     # points (ask a question, and staff tools); non-members see a join prompt.
     def show
+    end
+
+    # The link staff hand to students (by email, or in the course site). It is
+    # just the domain landing page: students sign in there and join.
+    def invite
+        @invite_url = domain_root_url(@course_domain.slug)
     end
 
     # Self-join from the standalone domain URL. Gated by enrollment_open in the

@@ -6,9 +6,13 @@ class CourseDomain < ApplicationRecord
     # this domain. Rotatable; possession of it authorizes creating student tokens.
     has_secure_token :link_secret, length: 36
 
-    # Attributes a teacher or admin may set through a course settings form.
+    # Attributes an admin may set through the course domain form.
     SETTABLE_ATTRIBUTES = [ :name, :enrollment_open, :location_type, :locale,
         :ask_location, :location_bumper, :link_mode ].freeze
+
+    # The subset a teacher manages for their own course. Everything else keeps
+    # its default and can only be changed by an admin.
+    TEACHER_SETTABLE_ATTRIBUTES = [ :name, :location_type, :locale ].freeze
 
     belongs_to :created_by, class_name: "User", optional: true,
         inverse_of: :created_course_domains

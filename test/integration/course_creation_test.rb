@@ -68,23 +68,34 @@ class CourseCreationTest < ActionDispatch::IntegrationTest
         assert_redirected_to root_path
     end
 
-    test "the creator can edit the course and rotate its link secret" do
+    test "the creator can edit the name, label and language" do
         sign_in_as users(:teacher)
         domain = course_domains(:algorithms)
 
         get edit_course_path(domain)
         assert_response :success
-        # the settings hidden during creation are available afterwards
-        assert_select "input[name=?]", "course_domain[enrollment_open]"
-        assert_select "input[name=?]", "course_domain[link_mode]"
+        # the same three fields as on the create form, and nothing else
+        assert_select "input[name=?]", "course_domain[location_type]"
+        %w[enrollment_open ask_location location_bumper link_mode].each do |field|
+            assert_select "[name=?]", "course_domain[#{field}]", count: 0
+        end
 
-        patch course_path(domain), params: { course_domain: { name: "Algorithms II" } }
+        patch course_path(domain), params: { course_domain: { name: "Algorithms II", locale: "nl" } }
         assert_redirected_to domain_root_path(domain.reload.slug)
         assert_equal "Algorithms II", domain.name
+        assert_equal "nl", domain.locale
+    end
 
-        old_secret = domain.link_secret
-        post rotate_secret_course_path(domain)
-        assert_not_equal old_secret, domain.reload.link_secret
+    test "a teacher cannot change the other settings by posting them" do
+        sign_in_as users(:teacher)
+        domain = course_domains(:algorithms)
+        assert domain.enrollment_open?
+
+        patch course_path(domain), params: {
+            course_domain: { name: "Algorithms", enrollment_open: "0", link_mode: "1" }
+        }
+        assert domain.reload.enrollment_open?, "enrollment_open is not a teacher setting"
+        assert_not domain.link_mode?
     end
 
     test "a teacher may not edit someone else's course" do
@@ -107,5 +118,20 @@ class CourseCreationTest < ActionDispatch::IntegrationTest
         sign_in_as users(:admin)
         get edit_course_path(course_domains(:databases))
         assert_response :success
+    end
+
+    test "staff can read the invite link for their course" do
+        sign_in_as users(:ta)
+        domain = course_domains(:algorithms)
+
+        get domain_invite_path(domain.slug)
+        assert_response :success
+        assert_select "body", /#{Regexp.escape(domain_root_url(domain.slug))}/
+    end
+
+    test "a student cannot read the invite link" do
+        sign_in_as users(:student)
+        get domain_invite_path(course_domains(:algorithms).slug)
+        assert_response :forbidden
     end
 end

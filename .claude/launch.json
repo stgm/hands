@@ -5,7 +5,20 @@
       "name": "rails",
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "export DATABASE_HOST=x DATABASE_NAME=x DATABASE_USER=x DATABASE_PASSWORD=x; bin/rails server -p 3001 -b 'ssl://0.0.0.0:3001?key=config/ssl/localhost.key&cert=config/ssl/localhost.crt'"],
+      "port": 3001,
+      "autoPort": false
+    },
+    {
+      "name": "rails-running",
+      "url": "https://localhost:3001",
       "port": 3001
+    },
+    {
+      "name": "rails-plain",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export DATABASE_HOST=x DATABASE_NAME=x DATABASE_USER=x DATABASE_PASSWORD=x; bin/rails server -p 3005 -b 127.0.0.1 -P tmp/pids/preview.pid"],
+      "port": 3005,
+      "autoPort": false
     }
   ]
 }
