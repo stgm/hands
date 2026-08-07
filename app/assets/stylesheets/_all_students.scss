@@ -60,12 +60,14 @@
 // empty state when the list contains no students to begin with
 .attendance-grid:not(:has(li))::before {
     content: "No students in this course yet.";
+    font-size: 1.25rem;
     color: var(--muted);
 }
 
 // empty state when all students have been filtered out
 .attendance-grid:has(li):not(:has(li:not([hidden])))::before {
     content: "No students match that filter.";
+    font-size: 1.25rem;
     color: var(--muted);
 }
 

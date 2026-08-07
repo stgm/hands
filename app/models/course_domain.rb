@@ -7,7 +7,7 @@ class CourseDomain < ApplicationRecord
     has_secure_token :link_secret, length: 36
 
     # Attributes an admin may set through the course domain form.
-    SETTABLE_ATTRIBUTES = [ :name, :enrollment_open, :location_type, :locale,
+    SETTABLE_ATTRIBUTES = [ :name, :slug, :enrollment_open, :location_type, :locale,
         :ask_location, :location_bumper, :link_mode ].freeze
 
     # The subset a teacher manages for their own course. Everything else keeps
@@ -24,8 +24,14 @@ class CourseDomain < ApplicationRecord
     has_many :presences, dependent: :destroy
     has_many :invitations, dependent: :destroy
 
+    # An admin may type a slug by hand; it is cleaned up the same way a
+    # generated one is. Blank means "back to a slug derived from the name".
+    before_validation :normalize_given_slug, if: :slug_changed?
+
     validates :name, presence: true
-    validates :slug, presence: true, uniqueness: true
+    validates :slug, presence: true,
+        uniqueness: { message: "is already used by another course" },
+        format: { with: /\A[a-z0-9]+(-[a-z0-9]+)*\z/, message: "may only contain lowercase letters, numbers and dashes" }
 
     # Site admins manage every course; a teacher manages the one they created.
     def managed_by?(user)
@@ -75,6 +81,15 @@ class CourseDomain < ApplicationRecord
     end
 
     private
+
+    def normalize_given_slug
+        if slug.blank?
+            self.slug = nil
+            send(:set_slug)
+        else
+            self.slug = normalize_friendly_id(slug)
+        end
+    end
 
     # Sorts "Group 2" before "Group 10" by comparing digit runs as numbers.
     def natural_sort_key(name)

@@ -6,6 +6,31 @@ class CourseDomainTest < ActiveSupport::TestCase
         assert_equal "intro-to-ruby", domain.slug
     end
 
+    test "accepts a hand-typed slug and normalizes it" do
+        domain = CourseDomain.create!(name: "Intro to Ruby")
+        domain.update!(slug: "Ruby 101")
+        assert_equal "ruby-101", domain.slug
+    end
+
+    test "a blank slug falls back to one derived from the name" do
+        domain = CourseDomain.create!(name: "Intro to Ruby")
+        domain.update!(slug: "")
+        assert_equal "intro-to-ruby", domain.slug
+    end
+
+    test "strips characters that are not usable in a URL from the slug" do
+        domain = CourseDomain.create!(name: "Intro to Ruby")
+        domain.update!(slug: "a/b?c")
+        assert_equal "a-b-c", domain.slug
+    end
+
+    test "rejects a slug another course already uses" do
+        taken = course_domains(:databases).slug
+        domain = CourseDomain.create!(name: "Intro to Ruby")
+        assert_not domain.update(slug: taken)
+        assert_equal [ "URL name is already used by another course" ], domain.errors.full_messages
+    end
+
     test "generates a link_secret on create and can rotate it" do
         domain = CourseDomain.create!(name: "Secrets")
         assert domain.link_secret.present?

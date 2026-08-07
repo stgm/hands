@@ -4,8 +4,8 @@
 <% content_for :app_subtitle, current_course_domain.name %>
 
 <div class="mini-app-body hands-app">
-  <p class="text-muted">We email an invitation link. They sign in and join
-     <%= current_course_domain.name %> with the role you pick here.</p>
+  <p class="text-muted">Send an invitation to join the course as staff.
+    </p>
 
   <%= form_with url: domain_staff_invitations_path(current_course_domain.slug), method: :post, id: "invitation_form" do |f| %>
     <div class="mb-3">
@@ -20,6 +20,5 @@
 </div>
 
 <div class="mini-app-footer">
-  <%= link_to "Back", domain_staff_path(current_course_domain.slug), class: "action" %>
   <%= submit_tag "Send invitation", class: "action primary", form: "invitation_form" %>
 </div>

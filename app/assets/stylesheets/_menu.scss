@@ -110,6 +110,7 @@
 
         &::before {
             max-width: 16rem;
+            font-size: 1.25rem;
             color: var(--muted);
         }
 
@@ -122,7 +123,27 @@
         }
 
         &.menu--courses-admin::before {
-            content: "You are not a member of any course yet. Use the button below to manage domains.";
+            content: "You are not a member of any course yet. Use the button below to manage courses.";
+        }
+    }
+
+    // Same empty-state technique for the staff roster, which counts pending
+    // invitations as list items too.
+    // No min-height here, unlike .menu--courses: that menu is nested inside a
+    // separate .mini-app-body, while this one *is* the body — a flex item that
+    // already fills the leftover space. A percentage min-height would resolve
+    // against the container and push the header and footer out of the card.
+    &.menu--staff:not(:has(li)) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        &::before {
+            content: "No staff yet. Use the button below to invite someone.";
+            max-width: 16rem;
+            font-size: 1.25rem;
+            color: var(--muted);
         }
     }
 

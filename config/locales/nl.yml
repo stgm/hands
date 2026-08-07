@@ -1,4 +1,8 @@
 nl:
+    activerecord:
+        attributes:
+            course_domain:
+                slug: "URL-naam"
     hands:
         assistance: Assistentie
         request_assistance_in_class: "Zet jezelf hier in de rij voor een vraag:"

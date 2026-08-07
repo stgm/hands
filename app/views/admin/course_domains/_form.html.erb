@@ -22,6 +22,17 @@
     <%= f.select :locale, I18n.available_locales.map { |l| [ l.to_s.upcase, l ] } %>
   </div>
   <% unless compact %>
+    <div class="mb-3">
+      <%= f.label :slug, "URL name" %>
+      <%= f.text_field :slug %>
+      <div class="hint">
+        <% if @course_domain.persisted? %>
+          The course is reached at /<%= @course_domain.slug %>. Changing this breaks existing links.
+        <% end %>
+        Leave empty to derive it from the name.
+      </div>
+    </div>
+
     <div class="field-check">
       <%= f.check_box :enrollment_open %>
       <%= f.label :enrollment_open, "Allow students to self-join via the domain link" %>

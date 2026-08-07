@@ -29,6 +29,10 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      course_domain:
+        slug: "URL name"
   hands:
     assistance: Assistance
     request_assistance_in_class: "Request assistance in class!"

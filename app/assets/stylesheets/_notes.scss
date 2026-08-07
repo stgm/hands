@@ -72,6 +72,7 @@
 
         &::before {
             content: "No notes yet.";
+            font-size: 1.25rem;
             color: var(--muted);
         }
     }

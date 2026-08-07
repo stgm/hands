@@ -31,7 +31,7 @@
   </nav>
   <div class="mini-app-footer">
     <% if current_user.admin? %>
-        <%= link_to "Manage domains", admin_course_domains_path, class: "action" %>
+        <%= link_to "Manage courses", admin_course_domains_path, class: "action" %>
     <% elsif current_user.may_create_course? %>
         <%= link_to "Create a course", new_course_path, class: "action" %>
     <% end %>
